@@ -21,7 +21,7 @@ function MobileBar({ open }: { open: () => void }) {
 }
 
 function MobileDrawer({ close }: { close: () => void }) {
-  const items: Array<[string, "grid"|"chart"|"calendar"|"truck"|"route"|"warehouse"|"fleet"|"driver"|"invoice", string]> = [["Dashboard","grid","/dashboard"],["Analytics","chart","#"],["Calendar","calendar","#"],["Shipments","truck","/shipments"],["Tracking","route","#"],["Warehouse","warehouse","#"],["Fleets","fleet","#"],["Drivers","driver","#"],["Invoices & Billing","invoice","#"]];
+  const items: Array<[string, "grid"|"chart"|"calendar"|"truck"|"route"|"warehouse"|"fleet"|"driver"|"invoice", string]> = [["Dashboard","grid","/dashboard"],["Analytics","chart","#"],["Calendar","calendar","#"],["Shipments","truck","/shipments"],["Tracking","route","#"],["Warehouse","warehouse","#"],["Fleets","fleet","#"],["Drivers","driver","#"],["Invoices & Billing","invoice","/invoices"]];
   return <div className={styles.drawerBackdrop} onClick={close}><aside className={styles.drawer} onClick={event=>event.stopPropagation()}><div className={styles.drawerBrand}><LogoMark word/><button type="button" onClick={close} aria-label="Close navigation">×</button></div><nav>{items.map(item=><Link key={item[0]} href={item[2]} className={item[0]==="Shipments"?styles.drawerActive:""} onClick={close}><Icon name={item[1]}/><span>{item[0]}</span></Link>)}</nav></aside></div>;
 }
 
@@ -89,7 +89,7 @@ export function ShipmentsPage() {
   const activeTabs = view === "grid" ? statuses : tableStatuses;
 
   return <><MobileBar open={()=>setDrawerOpen(true)}/>{drawerOpen&&<MobileDrawer close={()=>setDrawerOpen(false)}/>}<main className={styles.page}>
-    <header className={styles.pageHeader}><div><h1>Shipments</h1><div className={styles.crumbRow}><p><b>Dashboard</b><span>/</span>Shipments</p><ViewSwitcher view={view} setView={setView}/></div></div><button type="button" className={styles.newShipment}><Icon name="plus"/>New Shipment</button></header>
+    <header className={styles.pageHeader}><div><h1>Shipments</h1><div className={styles.crumbRow}><p><b>Dashboard</b><span>/</span>Shipments</p><ViewSwitcher view={view} setView={setView}/></div></div><Link href="/shipments/new" className={styles.newShipment}><Icon name="plus"/>New Shipment</Link></header>
     {view === "table" && <SummaryCards/>}
     <div className={view === "table" ? styles.tablePanel : styles.gridPanel}>
       <div className={styles.toolbar}><div className={styles.tabs}>{activeTabs.map(tab=><button type="button" className={status===tab?styles.activeTab:""} key={tab} onClick={()=>{setStatus(tab);setPage(1)}}>{tab}</button>)}</div><div className={styles.tools}><Search value={query} onChange={value=>{setQuery(value);setPage(1)}} placeholder={view==="grid"?"Search Shipment":"Search id, company, etc"}/><button type="button" className={styles.filter} onClick={()=>setStatus(current=>current==="All"?"Delivered":"All")}>⌯ <span>Filter</span></button>{view==="table"?<button type="button" className={styles.date} onClick={()=>setMonthOnly(value=>!value)}>▣ <span>{monthOnly?"All Dates":"This Month"}⌄</span></button>:<><span className={styles.sortLabel}>Sort by:</span><button type="button" className={styles.date} onClick={()=>{setSort("departure");setAscending(value=>!value)}}>Newest⌄</button></>}</div></div>
