@@ -1,0 +1,82 @@
+@media (min-width: 1024px) {
+  :global(.warehouse-mobile-grid) {
+    min-width: 0;
+    grid-template-columns: 220px minmax(0, 1fr) 365px;
+  }
+
+  .inventoryCard {
+    min-width: 0;
+    overflow: visible;
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .inventoryGrid {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    column-gap: 8px;
+  }
+
+  .inventoryColumn,
+  .barGuide {
+    min-width: 0;
+  }
+
+  .inventoryFooter {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  .inventoryFooter > span {
+    margin-left: 0;
+  }
+
+  .barGuide {
+    padding-right: 6px;
+    padding-left: 6px;
+  }
+}
+
+@media (max-width: 640px) {
+  :global(.warehouse-mobile-grid) {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  :global(.warehouse-mobile-grid) > * {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  :global(.warehouse-mobile-inventory-item) {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: 42% 58% !important;
+  }
+
+  :global(.warehouse-mobile-zone-grid) {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  :global(.warehouse-mobile-zone-grid) > article {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  :global(.warehouse-mobile-zone-grid) > article:nth-child(5) {
+    grid-column: 1 / -1 !important;
+  }
+
+  :global(.warehouse-mobile-zone-grid) > article:nth-child(5) > div {
+    display: grid;
+    grid-template-columns: repeat(5, 35px);
+  }
+}

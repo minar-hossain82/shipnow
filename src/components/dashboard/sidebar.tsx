@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Icon, type IconName } from "./icons";
 
-const primary: Array<[string, IconName, string]> = [["Dashboard","grid","/dashboard"],["Analytics","chart","#"],["Calendar","calendar","#"],["Shipments","truck","/shipments"],["Tracking","route","#"],["Warehouse","warehouse","#"],["Fleets","fleet","#"],["Drivers","driver","#"],["Invoices & Billing","invoice","/invoices"]];
+const primary: Array<[string, IconName, string]> = [["Dashboard","grid","/dashboard"],["Analytics","chart","#"],["Calendar","calendar","#"],["Shipments","truck","/shipments"],["Tracking","route","#"],["Warehouse","warehouse","/warehouse"],["Fleets","fleet","#"],["Drivers","driver","#"],["Invoices & Billing","invoice","/invoices"]];
 const secondary: Array<[string, IconName, string?]> = [["Message","message","19"],["Notification","bell","5"],["Settings","settings"]];
 
 function Brand() { return <div className="flex h-[80px] items-center gap-2.5 px-7"><span className="relative h-6 w-6"><i className="absolute left-1 top-0 h-3.5 w-2.5 -skew-x-[18deg] bg-[#8065f4]"/><i className="absolute bottom-0 right-1 h-3.5 w-2.5 -skew-x-[18deg] bg-[#8065f4]"/></span><span className="text-[20px] font-extrabold italic tracking-tight">SHIPNOW</span></div>; }
