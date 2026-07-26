@@ -24,3 +24,286 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Dashboard-only proportions tuned to the exported desktop frame. */
+.dashboard-shell section {
+  border-radius: 13px;
+  padding: 17px;
+  box-shadow: 0 1px 2px rgb(24 24 27 / 2%);
+}
+
+.dashboard-shell section > div:first-child h2 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.dashboard-shell section[class*="h-[114px]"] {
+  height: 121px;
+  padding: 18px;
+}
+
+.dashboard-shell section[class*="h-[114px]"] span[class*="h-10"][class*="w-10"] {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+
+.dashboard-shell div[class*="h-[259px]"] {
+  height: 274px;
+}
+
+.dashboard-shell section[class*="h-[394px]"] {
+  height: 418px;
+}
+
+.dashboard-shell section[class*="h-[394px]"] > div:last-child {
+  margin-top: 14px;
+  column-gap: 12px;
+  row-gap: 9px;
+}
+
+.dashboard-shell section[class*="h-[394px]"] > div:last-child > div > span {
+  width: 36px;
+  height: 36px;
+  border-radius: 7px;
+  font-size: 10px;
+}
+
+.dashboard-shell section[class*="h-[394px]"] > div:last-child p {
+  margin-left: 9px;
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.dashboard-shell section[class*="h-[394px]"] > div:last-child small {
+  margin-top: 2px;
+  font-size: 9px;
+}
+
+.dashboard-shell section[class*="h-[441px]"] {
+  height: 467px;
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"] {
+  padding: 12px;
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"] label {
+  left: 10px;
+  top: 20px;
+  width: 257px;
+  height: 39px;
+  padding-inline: 16px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgb(24 24 27 / 9%);
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"]::after {
+  content: "+\A−";
+  position: absolute;
+  z-index: 10;
+  top: 21px;
+  right: 10px;
+  width: 31px;
+  height: 59px;
+  border-radius: 8px;
+  background:
+    linear-gradient(#e5e5e5, #e5e5e5) center / 17px 1px no-repeat,
+    #ffffff;
+  box-shadow: 0 4px 12px rgb(24 24 27 / 9%);
+  color: #55555a;
+  font-size: 21px;
+  font-weight: 300;
+  line-height: 29px;
+  text-align: center;
+  white-space: pre;
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"] > div[class*="top-[145px]"] {
+  right: auto;
+  left: 0;
+  top: 184px;
+  width: 51.38%;
+  border-top-width: 4px;
+  transform: rotate(-12.17deg);
+  transform-origin: left center;
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"] > div[class*="top-[122px]"] {
+  left: calc(50.22% - 14px);
+  top: 120px;
+  width: 28px;
+  height: 28px;
+  box-shadow: 0 3px 9px rgb(128 101 244 / 30%);
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"] > div[class*="top-[133px]"] {
+  right: auto;
+  left: 50.22%;
+  top: 134px;
+  width: 47.37%;
+  border-top-width: 4px;
+  transform: rotate(-11.87deg);
+  transform-origin: left center;
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"] > div:last-child {
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgb(24 24 27 / 9%);
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"] > div:last-child > div:nth-child(2) {
+  margin-block: 20px;
+  height: 4px;
+  border-top-color: transparent;
+  border-top-width: 0;
+  background: linear-gradient(to right, #8065f4 0 65%, #dddddd 65% 100%);
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"] > div:last-child > div:nth-child(2) > i:first-child,
+.dashboard-shell section[class*="bg-[#ededed]"] > div:last-child > div:nth-child(2) > i:last-child {
+  top: -7px;
+  width: 18px;
+  height: 18px;
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"] > div:last-child > div:nth-child(2) > i:first-child {
+  left: -9px;
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"] > div:last-child > div:nth-child(2) > i:last-child {
+  right: -9px;
+}
+
+.dashboard-shell section[class*="bg-[#ededed]"] > div:last-child > div:nth-child(2) > i:nth-child(2) {
+  top: -11px;
+  width: 26px;
+  height: 26px;
+}
+
+.dashboard-shell section[class*="h-[403px]"] {
+  height: 427px;
+}
+
+.dashboard-shell section[class*="h-[403px]"] thead {
+  height: 48px;
+}
+
+.dashboard-shell section[class*="h-[403px]"] tbody tr {
+  height: 62px;
+}
+
+.dashboard-shell section[class*="h-[403px]"] tbody td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.dashboard-shell section[class*="h-[403px]"] tbody td:last-child span {
+  padding: 4px 9px;
+  font-size: 9px;
+  line-height: 14px;
+}
+
+.dashboard-shell section[class*="h-[403px]"] ol {
+  margin-top: 21px;
+  padding-left: 30px;
+}
+
+.dashboard-shell section[class*="h-[403px]"] ol li {
+  margin-bottom: 21px;
+}
+
+.dashboard-shell section[class*="h-[403px]"] ol li > span {
+  left: -45px;
+  width: 31px;
+  height: 31px;
+  font-size: 11px;
+}
+
+.dashboard-sidebar nav button {
+  padding-inline: 17px;
+}
+
+.shipments-main {
+  margin-left: 224px;
+}
+
+@media (max-width: 1023px) {
+  .dashboard-sidebar {
+    width: 48px;
+  }
+
+  .dashboard-sidebar > div:first-child {
+    height: 62px;
+    padding-inline: 12px;
+  }
+
+  .dashboard-sidebar > div:first-child span:first-child {
+    width: 24px;
+  }
+
+  .dashboard-sidebar > div:first-child span:last-child,
+  .dashboard-sidebar > div:nth-child(2) > div,
+  .dashboard-sidebar > div:nth-child(2) > span:last-child,
+  .dashboard-sidebar .nav-label,
+  .dashboard-sidebar .nav-badge,
+  .dashboard-sidebar > div:last-child {
+    display: none;
+  }
+
+  .dashboard-sidebar > div:nth-child(2) {
+    width: 32px;
+    height: 32px;
+    margin-inline: 8px;
+    padding: 0;
+  }
+
+  .dashboard-sidebar > div:nth-child(2) > span:first-child {
+    width: 32px;
+    height: 32px;
+  }
+
+  .dashboard-sidebar nav {
+    margin-top: 20px;
+    padding-inline: 8px;
+  }
+
+  .dashboard-sidebar nav ul {
+    gap: 8px;
+  }
+
+  .dashboard-sidebar nav a,
+  .dashboard-sidebar nav button {
+    justify-content: center;
+    height: 36px;
+    padding-inline: 0;
+  }
+
+  .dashboard-sidebar .nav-icon {
+    width: 19px;
+    height: 19px;
+    margin-right: 0;
+  }
+
+  .dashboard-sidebar nav > div {
+    margin-block: 54px 12px;
+  }
+
+  .shipments-main {
+    margin-left: 48px;
+  }
+}
+
+@media (max-width: 640px) {
+  .shipments-shell .dashboard-sidebar {
+    display: none;
+  }
+
+  .shipments-main {
+    margin-left: 0;
+  }
+}

@@ -1,0 +1,16 @@
+import Link from "next/link";
+import { Icon, type IconName } from "./icons";
+
+const primary: Array<[string, IconName, string]> = [["Dashboard","grid","/dashboard"],["Analytics","chart","#"],["Calendar","calendar","#"],["Shipments","truck","/shipments"],["Tracking","route","#"],["Warehouse","warehouse","#"],["Fleets","fleet","#"],["Drivers","driver","#"],["Invoices & Billing","invoice","#"]];
+const secondary: Array<[string, IconName, string?]> = [["Message","message","19"],["Notification","bell","5"],["Settings","settings"]];
+
+function Brand() { return <div className="flex h-[80px] items-center gap-2.5 px-7"><span className="relative h-6 w-6"><i className="absolute left-1 top-0 h-3.5 w-2.5 -skew-x-[18deg] bg-[#8065f4]"/><i className="absolute bottom-0 right-1 h-3.5 w-2.5 -skew-x-[18deg] bg-[#8065f4]"/></span><span className="text-[20px] font-extrabold italic tracking-tight">SHIPNOW</span></div>; }
+
+function NavItem({ item, active=false }: { item: [string, IconName, string?]; active?: boolean }) { const content=<><Icon name={item[1]} className="nav-icon mr-[15px] h-[19px] w-[19px] shrink-0"/><span className="nav-label">{item[0]}</span>{item[2] && !item[2].startsWith("/") && item[2]!=="#" && <span className="nav-badge ml-auto rounded-md bg-[#8065f4] px-2 py-1 text-[11px] font-semibold text-white">{item[2]}</span>}</>; const classes=`flex h-[38px] w-full items-center rounded-md px-4 text-left text-[14px] ${active ? "bg-[#ddd6fe] font-semibold text-[#5033b6]" : "text-[#6f6f73]"}`; return <li>{item[2]?.startsWith("/")?<Link href={item[2]} className={classes}>{content}</Link>:<button type="button" className={classes}>{content}</button>}</li>; }
+
+export function Sidebar({ activeLabel="Dashboard" }: { activeLabel?: string }) { return <aside className="dashboard-sidebar fixed inset-y-0 left-0 z-20 flex w-[224px] flex-col border-r border-[#eeeeef] bg-white">
+  <Brand />
+  <div className="mx-4 flex h-12 items-center rounded-xl bg-[#f3f3f3] p-2"><span className="grid h-8 w-8 place-items-center rounded-full bg-[#2c2c2c] text-xs font-bold text-white">JD</span><div className="ml-3"><p className="text-[13px] font-medium">John Doe</p><p className="text-[11px] text-[#8b8b8f]">Admin</p></div><span className="ml-auto text-[#555]">⌄</span></div>
+  <nav className="mt-[21px] px-4"><ul className="flex flex-col gap-2">{primary.map(item=><NavItem key={item[0]} item={item} active={item[0]===activeLabel}/>)}</ul><div className="my-4 border-t border-[#eeeeef]"/><ul className="flex flex-col gap-2">{secondary.map(item=><NavItem key={item[0]} item={item}/>)}</ul></nav>
+  <div className="mt-auto px-4 pb-5"><div className="relative h-[252px] overflow-hidden rounded-xl bg-[#282828] p-[18px] text-white"><span className="absolute -right-1 -top-3 text-7xl font-black italic text-[#6854d6]">{"//"}</span><p className="relative mt-1 text-[24px] font-semibold leading-[1.05]">Loving<br/>ShipNow<br/>Free?</p><p className="relative mt-5 text-[11px] leading-4 text-[#d4d4d4]">Go Pro to access priority support, real-time tracking, and full analytics.</p><button type="button" className="relative mt-5 h-11 w-full rounded-lg bg-white text-[14px] font-medium text-[#292929]">Go Pro Today</button></div></div>
+</aside>; }
