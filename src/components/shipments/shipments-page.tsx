@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Icon } from "@/components/dashboard/icons";
-import { shipments, type Shipment, type ShipmentStatus } from "@/data/shipments";
+import { shipments, type Shipment, type ShipmentStatus, type ShipmentTableStatus } from "@/data/shipments";
 import styles from "./shipments.module.css";
 
 type View = "grid" | "table";
@@ -33,6 +33,10 @@ function StatusPill({ status }: { status: ShipmentStatus }) {
   return <span className={`${styles.status} ${styles[status.replaceAll(" ", "").toLowerCase()]}`}>{status === "Delivered" ? "Completed" : status}</span>;
 }
 
+function TableStatusPill({ status }: { status: ShipmentTableStatus }) {
+  return <span className={`${styles.tableStatus} ${styles[`tableStatus${status}`]}`}><i/>{status}</span>;
+}
+
 function Company({ shipment, compact = false }: { shipment: Shipment; compact?: boolean }) {
   return <div className={styles.company}><span className={styles.companyMark}>{shipment.mark}</span><span><b>{shipment.company}</b><small>{shipment.category}</small></span>{compact && <StatusPill status={shipment.status}/>}</div>;
 }
@@ -55,8 +59,28 @@ function ShipmentCard({ shipment }: { shipment: Shipment }) {
 }
 
 function SummaryCards() {
-  const cards = [["▣","Total Shipments","1,284","Up by","4.6%"],["◷","Pending","285","Up by","8.7%"],["▣","Delivery","594","Down","4.2%"],["☑","Completed","405","Up by","3.9%"]];
-  return <div className={styles.summaries}>{cards.map(card=><article key={card[1]}><div><span>{card[0]}</span><p>{card[1]}</p><button type="button" aria-label={`More ${card[1]}`}>•••</button></div><strong>{card[2]}</strong><small><i>{card[3]==="Down"?"⌄":"⌃"}</i>{card[3]} <b>{card[4]}</b> this week</small></article>)}</div>;
+  const cards = [
+    { icon: "▣", title: "Total Shipments", value: "1,284", direction: "up", change: "Up by", percent: "4.6%", period: "this week" },
+    { icon: "◷", title: "Pending", value: "285", direction: "up", change: "Up by", percent: "8.7%", period: "this week" },
+    { icon: "▣", title: "Delivery", value: "594", direction: "down", change: "Down", percent: "4.2%", period: "from last week" },
+    { icon: "☑", title: "Completed", value: "405", direction: "up", change: "Up by", percent: "3.9%", period: "this week" },
+  ] as const;
+
+  return <div className={styles.summaries}>{cards.map(card=><article key={card.title}>
+    <div className={styles.summaryTop}>
+      <span className={styles.summaryIcon}>{card.icon}</span>
+      <p>{card.title}</p>
+      <button type="button" aria-label={`More ${card.title}`}><Icon name="more"/></button>
+    </div>
+    <div className={styles.summaryBottom}>
+      <strong>{card.value}</strong>
+      <div className={`${styles.summaryTrend} ${card.direction === "down" ? styles.summaryTrendDown : ""}`}>
+        <i aria-hidden="true">{card.direction === "down" ? "⌄" : "⌃"}</i>
+        <span>{card.change}<br/>{card.period}</span>
+        <b>{card.percent}</b>
+      </div>
+    </div>
+  </article>)}</div>;
 }
 
 export function ShipmentsPage() {
@@ -93,7 +117,7 @@ export function ShipmentsPage() {
     {view === "table" && <SummaryCards/>}
     <div className={view === "table" ? styles.tablePanel : styles.gridPanel}>
       <div className={styles.toolbar}><div className={styles.tabs}>{activeTabs.map(tab=><button type="button" className={status===tab?styles.activeTab:""} key={tab} onClick={()=>{setStatus(tab);setPage(1)}}>{tab}</button>)}</div><div className={styles.tools}><Search value={query} onChange={value=>{setQuery(value);setPage(1)}} placeholder={view==="grid"?"Search Shipment":"Search id, company, etc"}/><button type="button" className={styles.filter} onClick={()=>setStatus(current=>current==="All"?"Delivered":"All")}>⌯ <span>Filter</span></button>{view==="table"?<button type="button" className={styles.date} onClick={()=>setMonthOnly(value=>!value)}>▣ <span>{monthOnly?"All Dates":"This Month"}⌄</span></button>:<><span className={styles.sortLabel}>Sort by:</span><button type="button" className={styles.date} onClick={()=>{setSort("departure");setAscending(value=>!value)}}>Newest⌄</button></>}</div></div>
-      {view === "grid" ? <div className={styles.cards}>{pageItems.map(item=><ShipmentCard shipment={item} key={item.id}/>)}</div> : <div className={styles.tableScroll}><table className={styles.table}><thead><tr><th><input type="checkbox" checked={allSelected} onChange={toggleAll} aria-label="Select page"/></th><SortHead label="Shipping ID" value="id" action={chooseSort}/><SortHead label="Company" value="company" action={chooseSort}/><SortHead label="Carriers" value="carrier" action={chooseSort}/><SortHead label="Product Category" value="product" action={chooseSort}/><SortHead label="Weight" value="weight" action={chooseSort}/><SortHead label="Route" value="origin" action={chooseSort}/><SortHead label="Date" value="departure" action={chooseSort}/><SortHead label="Progress" value="progress" action={chooseSort}/><SortHead label="Status" value="status" action={chooseSort}/></tr></thead><tbody>{pageItems.map(item=><tr key={item.id} className={selected.has(item.id)?styles.selectedRow:""}><td><input type="checkbox" checked={selected.has(item.id)} onChange={()=>toggle(item.id)} aria-label={`Select ${item.id}`}/></td><td><b className={styles.shipmentId}>{item.id}</b><small>{item.freight}</small></td><td><Company shipment={item}/></td><td><b>{item.carrier}</b><small>{item.category}</small></td><td>{item.product}</td><td>{item.weight}</td><td><b>{item.origin} <small>(Origin)</small></b><b className={styles.destination}>{item.destination} <small>(Destination)</small></b></td><td><b>{item.departure} <small>(ATD)</small></b><b className={styles.destination}>{item.arrival} <small>(ETA)</small></b></td><td><div className={styles.tableProgress}><i><span style={{width:`${item.progress}%`}}/></i><b>{item.progress}%</b></div></td><td><StatusPill status={item.status}/></td></tr>)}</tbody></table></div>}
+      {view === "grid" ? <div className={styles.cards}>{pageItems.map(item=><ShipmentCard shipment={item} key={item.id}/>)}</div> : <div className={styles.tableScroll}><table className={styles.table}><colgroup className={styles.tableColumns}><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/></colgroup><thead><tr><th><input type="checkbox" checked={allSelected} onChange={toggleAll} aria-label="Select page"/></th><SortHead label="Shipping ID" value="id" action={chooseSort}/><SortHead label="Company" value="company" action={chooseSort}/><SortHead label="Carriers" value="carrier" action={chooseSort}/><SortHead label="Product Category" value="product" action={chooseSort}/><SortHead label="Weight" value="weight" action={chooseSort}/><SortHead label="Route" value="origin" action={chooseSort}/><SortHead label="Date" value="departure" action={chooseSort}/><SortHead label="Progress" value="progress" action={chooseSort}/><SortHead label="Status" value="status" action={chooseSort}/></tr></thead><tbody>{pageItems.map(item=><tr key={item.id} className={selected.has(item.id)?styles.selectedRow:""}><td><input type="checkbox" checked={selected.has(item.id)} onChange={()=>toggle(item.id)} aria-label={`Select ${item.id}`}/></td><td><b className={styles.shipmentId}>{item.id}</b><small>{item.freight}</small></td><td><Company shipment={item}/></td><td><b>{item.carrier}</b><small>{item.category}</small></td><td>{item.product}</td><td>{item.weight}</td><td><b>{item.origin} <small>(Origin)</small></b><b className={styles.destination}>{item.destination} <small>(Destination)</small></b></td><td><b>{item.departure} <small>(ATD)</small></b><b className={styles.destination}>{item.arrival} <small>(ETA)</small></b></td><td><div className={styles.tableProgress}><i><span style={{width:`${item.progress}%`}}/></i><b>{item.progress}%</b></div></td><td><TableStatusPill status={item.tableStatus}/></td></tr>)}</tbody></table></div>}
       <Pager page={page} pages={pages} pageSize={pageSize} setPage={setPage} setPageSize={setPageSize} grid={view==="grid"}/>
     </div><Footer/>
   </main></>;

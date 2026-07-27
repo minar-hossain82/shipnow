@@ -1,14 +1,1452 @@
-.page{padding:24px 22px 0;min-height:100vh}.mobileBar{display:none}.pageHeader{height:76px;display:flex;justify-content:space-between;align-items:flex-start}.pageHeader h1{font-size:26px;line-height:30px;font-weight:700}.crumbRow{display:flex;align-items:center;gap:18px;margin-top:4px}.crumbRow p{font-size:12px}.crumbRow p b{color:#5b3cc4;font-weight:500}.crumbRow p span{margin:0 7px;color:#777}.newShipment{height:44px;border-radius:9px;background:#292929;color:white;padding:0 20px;display:flex;align-items:center;gap:8px;font-size:14px}.newShipment svg{width:20px}.viewSwitcher{display:flex;border-radius:8px;background:#e7e7e7;padding:3px;gap:2px}.viewSwitcher button{height:25px;padding:0 8px;border-radius:6px;font-size:11px;color:#737377}.viewSwitcher .chosen{background:#8065f4;color:#fff}.summaries{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:4px 0 20px}.summaries article{height:110px;border-radius:13px;background:#fff;padding:18px}.summaries article>div{display:flex;align-items:center;color:#777}.summaries article>div>span{width:29px;height:29px;display:grid;place-items:center;border-radius:7px;background:#e7e0ff;color:#8065f4;margin-right:9px}.summaries article p{font-size:13px}.summaries article button{margin-left:auto;color:#777}.summaries strong{display:block;font-size:27px;line-height:32px;margin-top:11px}.summaries small{float:right;margin-top:-27px;color:#777;font-size:11px}.summaries small i{display:inline-grid;width:20px;height:20px;place-items:center;border-radius:50%;background:#def8e9;color:#20a368;margin-right:8px}.summaries small b{color:#20a368;background:#def8e9;padding:1px 4px;border-radius:5px}.gridPanel,.tablePanel{border-radius:13px}.tablePanel{background:#fff;padding:16px}.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}.gridPanel .toolbar{margin-top:0}.tabs{height:38px;display:flex;background:#fff;border-radius:11px;overflow:hidden}.tablePanel .tabs{background:#f1f1f1}.tabs button{padding:0 22px;color:#777;font-size:13px;white-space:nowrap}.tabs .activeTab{background:#292929;color:#fff;border-radius:10px}.tools{display:flex;align-items:center;gap:10px}.search{height:38px;width:238px;background:#fff;border-radius:10px;display:flex;align-items:center;padding:0 12px;color:#777}.tablePanel .search{background:#f3f3f3}.search svg{width:18px}.search input{margin-left:9px;background:transparent;outline:none;width:100%;font-size:12px}.filter,.date{height:38px;border-radius:10px;background:#fff;padding:0 14px;font-size:13px}.tablePanel .filter,.tablePanel .date{background:#f3f3f3}.sortLabel{font-size:11px;color:#777;margin-left:2px}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.shipmentCard{height:308px;border-radius:13px;background:#fff;padding:17px}.cardTop{height:58px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between}.cardTop>div>b{display:block;font-size:14px;margin-bottom:6px}.freightIcon{width:42px;height:42px;border-radius:12px;background:#e8e8e8;display:grid;place-items:center;font-size:20px}.status{display:inline-block;border-radius:10px;padding:3px 10px;font-size:10px;line-height:14px;background:#e6e6e6;white-space:nowrap}.intransit{background:#e5ddff}.outfordelivery{background:#e4e4e4}.delivered{background:#dff8e9;color:#188655}.processing{background:#fff1a8}.company{display:flex;align-items:center;min-width:0;height:64px}.companyMark{width:34px;text-align:center;font-size:28px;font-weight:700;color:#8065f4;margin-right:10px}.company b{display:block;font-size:12px;white-space:nowrap}.company small,.table td small{display:block;font-size:10px;color:#8b8b8f;font-weight:400;margin-top:3px}.company>.status{margin-left:auto;display:none}.routeBox{background:#f4f4f4;border-radius:10px;padding:10px 12px}.routeBox>div{display:grid;grid-template-columns:82px 1fr;align-items:center;min-height:43px;position:relative}.routeBox span{font-size:10px;color:#888}.routeBox span i{display:inline-block;width:11px;height:11px;background:#8065f4;border:3px solid #ddd6fe;border-radius:50%;margin-right:7px}.routeBox b,.routeBox small{text-align:right}.routeBox b{font-size:12px}.routeBox small{font-size:9px;color:#888;margin-top:4px}.progressMeta{display:flex;justify-content:space-between;margin-top:15px;color:#888;font-size:10px}.progressMeta b{font-size:12px;color:#333}.progress{height:7px;background:#eee;border-radius:4px;margin-top:8px;overflow:hidden}.progress i{display:block;height:100%;background:#8065f4;border-radius:4px}.tableScroll{overflow-x:auto}.table{width:100%;min-width:1190px;border-collapse:collapse;font-size:11px}.table th{height:46px;text-align:left;border-bottom:1px solid #ddd;font-weight:500;padding:0 8px;white-space:nowrap}.table th:first-child,.table td:first-child{width:28px}.table th button{font:inherit}.table td{height:60px;border-bottom:1px solid #ddd;padding:7px 8px;vertical-align:middle;white-space:nowrap}.table td:nth-child(2){width:105px}.table td:nth-child(3){width:145px}.table td:nth-child(7){width:175px}.table td:nth-child(8){width:210px}.table .company{height:auto}.table .companyMark{font-size:22px;width:24px}.table td>b{display:block;font-weight:500}.shipmentId,.destination{color:#5133b8}.selectedRow{background:#f0edff}.tableProgress{display:flex;align-items:center;gap:6px}.tableProgress>i{display:block;width:72px;height:6px;background:#eee;border-radius:3px;overflow:hidden}.tableProgress>i span{display:block;height:100%;background:#8065f4;border-radius:3px}.pager{height:55px;display:flex;align-items:flex-end;justify-content:space-between;color:#777;font-size:13px}.pageSize{display:flex;align-items:center;gap:8px}.pageSize select{height:35px;border-radius:8px;background:#fff;padding:0 9px;color:#333}.pages{display:flex;align-items:center;gap:6px}.pages span{display:flex;align-items:center;gap:6px}.pages i{font-style:normal}.pages button{width:34px;height:34px;border-radius:8px;background:#fff;color:#333}.pages button.current{background:#8065f4;color:#fff}.pages button:disabled{opacity:.35}.footer{height:65px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#777}.footer>div{display:flex;align-items:center;gap:24px}.footer b{color:#444}.footer>div:last-child{font-size:18px;gap:16px}.logo{position:relative;display:block;width:26px;height:26px}.logo i{position:absolute;width:9px;height:15px;background:#8065f4;transform:skewX(-18deg)}.logo i:first-child{left:4px;top:0}.logo i:nth-child(2){right:4px;bottom:0}.logo b{position:absolute;left:34px;top:2px;font-size:18px;font-style:italic}
+.page {
+  padding: 24px 22px 0;
+  min-height: 100vh;
+}
+.mobileBar {
+  display: none;
+}
+.pageHeader {
+  height: 76px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.pageHeader h1 {
+  font-size: 26px;
+  line-height: 30px;
+  font-weight: 700;
+}
+.crumbRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 4px;
+}
+.crumbRow p {
+  font-size: 12px;
+}
+.crumbRow p b {
+  color: #5b3cc4;
+  font-weight: 500;
+}
+.crumbRow p span {
+  margin: 0 7px;
+  color: #777;
+}
+.newShipment {
+  height: 44px;
+  border-radius: 9px;
+  background: #292929;
+  color: white;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.newShipment svg {
+  width: 20px;
+}
+.viewSwitcher {
+  display: flex;
+  border-radius: 8px;
+  background: #e7e7e7;
+  padding: 3px;
+  gap: 2px;
+}
+.viewSwitcher button {
+  height: 25px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #737377;
+}
+.viewSwitcher .chosen {
+  background: #8065f4;
+  color: #fff;
+}
+.summaries {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: 4px 0 20px;
+}
+.summaries article {
+  height: 110px;
+  box-sizing: border-box;
+  border-radius: 13px;
+  background: #fff;
+  padding: 16px 17px 15px;
+}
+.summaryTop {
+  display: flex;
+  align-items: center;
+  height: 29px;
+  color: #777;
+}
+.summaryIcon {
+  flex: 0 0 29px;
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: #e7e0ff;
+  color: #8065f4;
+  margin-right: 9px;
+}
+.summaries article p {
+  font-size: 13px;
+  line-height: 17px;
+  font-weight: 400;
+}
+.summaries article button {
+  margin-left: auto;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  color: #777;
+}
+.summaries article button svg {
+  width: 18px;
+  height: 18px;
+}
+.summaryBottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 48px;
+}
+.summaries strong {
+  display: block;
+  font-size: 27px;
+  line-height: 31px;
+  font-weight: 700;
+}
+.summaryTrend {
+  display: grid;
+  grid-template-columns: 20px auto auto;
+  grid-template-rows: 14px 14px;
+  align-items: center;
+  column-gap: 7px;
+  color: #777;
+  font-size: 11px;
+  line-height: 14px;
+  white-space: nowrap;
+}
+.summaryTrend i {
+  display: inline-grid;
+  grid-row: 1 / 3;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border-radius: 50%;
+  background: #def8e9;
+  color: #20a368;
+  font-style: normal;
+  line-height: 1;
+}
+.summaryTrend span {
+  grid-row: 1 / 3;
+}
+.summaryTrend b {
+  grid-column: 3;
+  grid-row: 1;
+  color: #20a368;
+  background: #def8e9;
+  padding: 1px 4px;
+  border-radius: 5px;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 600;
+}
+.summaryTrendDown i {
+  color: #8065f4;
+  background: #eeeaff;
+}
+.summaryTrendDown b {
+  color: #6447d5;
+  background: #eeeaff;
+}
+.gridPanel,
+.tablePanel {
+  border-radius: 13px;
+}
+.tablePanel {
+  background: #fff;
+  padding: 16px;
+}
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.gridPanel .toolbar {
+  margin-top: 0;
+}
+.tabs {
+  height: 38px;
+  display: flex;
+  background: #fff;
+  border-radius: 11px;
+  overflow: hidden;
+}
+.tablePanel .tabs {
+  background: #f1f1f1;
+}
+.tabs button {
+  padding: 0 22px;
+  color: #777;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.tabs .activeTab {
+  background: #292929;
+  color: #fff;
+  border-radius: 10px;
+}
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.search {
+  height: 38px;
+  width: 238px;
+  background: #fff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  color: #777;
+}
+.tablePanel .search {
+  background: #f3f3f3;
+}
+.search svg {
+  width: 18px;
+}
+.search input {
+  margin-left: 9px;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 12px;
+}
+.filter,
+.date {
+  height: 38px;
+  border-radius: 10px;
+  background: #fff;
+  padding: 0 14px;
+  font-size: 13px;
+}
+.tablePanel .filter,
+.tablePanel .date {
+  background: #f3f3f3;
+}
+.sortLabel {
+  font-size: 11px;
+  color: #777;
+  margin-left: 2px;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.shipmentCard {
+  height: 308px;
+  border-radius: 13px;
+  background: #fff;
+  padding: 17px;
+}
+.cardTop {
+  height: 58px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+}
+.cardTop > div > b {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.freightIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #e8e8e8;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+.status {
+  display: inline-block;
+  border-radius: 10px;
+  padding: 3px 10px;
+  font-size: 10px;
+  line-height: 14px;
+  background: #e6e6e6;
+  white-space: nowrap;
+}
+.intransit {
+  background: #e5ddff;
+}
+.outfordelivery {
+  background: #e4e4e4;
+}
+.delivered {
+  background: #dff8e9;
+  color: #188655;
+}
+.processing {
+  background: #fff1a8;
+}
+.company {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 64px;
+}
+.companyMark {
+  width: 34px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #8065f4;
+  margin-right: 10px;
+}
+.company b {
+  display: block;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.company small,
+.table td small {
+  display: block;
+  font-size: 10px;
+  color: #8b8b8f;
+  font-weight: 400;
+  margin-top: 3px;
+}
+.company > .status {
+  margin-left: auto;
+  display: none;
+}
+.routeBox {
+  background: #f4f4f4;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.routeBox > div {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  align-items: center;
+  min-height: 43px;
+  position: relative;
+}
+.routeBox span {
+  font-size: 10px;
+  color: #888;
+}
+.routeBox span i {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  background: #8065f4;
+  border: 3px solid #ddd6fe;
+  border-radius: 50%;
+  margin-right: 7px;
+}
+.routeBox b,
+.routeBox small {
+  text-align: right;
+}
+.routeBox b {
+  font-size: 12px;
+}
+.routeBox small {
+  font-size: 9px;
+  color: #888;
+  margin-top: 4px;
+}
+.progressMeta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  color: #888;
+  font-size: 10px;
+}
+.progressMeta b {
+  font-size: 12px;
+  color: #333;
+}
+.progress {
+  height: 7px;
+  background: #eee;
+  border-radius: 4px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.progress i {
+  display: block;
+  height: 100%;
+  background: #8065f4;
+  border-radius: 4px;
+}
+.tableScroll {
+  overflow-x: auto;
+}
+.table {
+  width: 100%;
+  min-width: 1190px;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.table th {
+  height: 46px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-weight: 500;
+  padding: 0 8px;
+  white-space: nowrap;
+}
+.table th button {
+  font: inherit;
+}
+.table td {
+  height: 60px;
+  border-bottom: 1px solid #ddd;
+  padding: 7px 8px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.table .company {
+  height: auto;
+}
+.table .companyMark {
+  font-size: 22px;
+  width: 24px;
+}
+.table td > b {
+  display: block;
+  font-weight: 500;
+}
+.shipmentId,
+.destination {
+  color: #5133b8;
+}
+.selectedRow {
+  background: #f0edff;
+}
+.tableProgress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tableProgress > i {
+  display: block;
+  width: 72px;
+  height: 6px;
+  background: #eee;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.tableProgress > i span {
+  display: block;
+  height: 100%;
+  background: #8065f4;
+  border-radius: 3px;
+}
+.pager {
+  height: 55px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  color: #777;
+  font-size: 13px;
+}
+.pageSize {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pageSize select {
+  height: 35px;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0 9px;
+  color: #333;
+}
+.pages {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pages span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pages i {
+  font-style: normal;
+}
+.pages button {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+}
+.pages button.current {
+  background: #8065f4;
+  color: #fff;
+}
+.pages button:disabled {
+  opacity: 0.35;
+}
+.footer {
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #777;
+}
+.footer > div {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.footer b {
+  color: #444;
+}
+.footer > div:last-child {
+  font-size: 18px;
+  gap: 16px;
+}
+.logo {
+  position: relative;
+  display: block;
+  width: 26px;
+  height: 26px;
+}
+.logo i {
+  position: absolute;
+  width: 9px;
+  height: 15px;
+  background: #8065f4;
+  transform: skewX(-18deg);
+}
+.logo i:first-child {
+  left: 4px;
+  top: 0;
+}
+.logo i:nth-child(2) {
+  right: 4px;
+  bottom: 0;
+}
+.logo b {
+  position: absolute;
+  left: 34px;
+  top: 2px;
+  font-size: 18px;
+  font-style: italic;
+}
 
-@media (max-width:1023px){.page{padding:20px 16px 0}.pageHeader{height:65px}.pageHeader h1{font-size:24px}.newShipment{height:38px}.summaries{grid-template-columns:repeat(2,1fr);gap:16px;margin:3px 0 20px}.summaries article{height:120px;padding:20px}.summaries strong{font-size:28px;margin-top:15px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.shipmentCard{height:294px;padding:16px}.toolbar{align-items:flex-start}.tabs button{padding:0 15px}.search{width:38px;padding:0 10px}.search input{display:none}.filter{width:38px;padding:0}.filter span{display:none}.sortLabel{margin-top:13px}.tablePanel{padding:16px}.table{min-width:1050px}.tablePanel .toolbar{align-items:center}.tablePanel .tools{margin-left:auto}.tablePanel .tabs{flex:0 0 auto}.footer{height:78px}.footer>div{gap:18px}}
+@media (max-width: 1023px) {
+  .page {
+    padding: 20px 16px 0;
+  }
+  .pageHeader {
+    height: 65px;
+  }
+  .pageHeader h1 {
+    font-size: 24px;
+  }
+  .newShipment {
+    height: 38px;
+  }
+  .summaries {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 3px 0 20px;
+  }
+  .summaries article {
+    height: 120px;
+    padding: 20px;
+  }
+  .summaries strong {
+    font-size: 28px;
+    margin-top: 15px;
+  }
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .shipmentCard {
+    height: 294px;
+    padding: 16px;
+  }
+  .toolbar {
+    align-items: flex-start;
+  }
+  .tabs button {
+    padding: 0 15px;
+  }
+  .search {
+    width: 38px;
+    padding: 0 10px;
+  }
+  .search input {
+    display: none;
+  }
+  .filter {
+    width: 38px;
+    padding: 0;
+  }
+  .filter span {
+    display: none;
+  }
+  .sortLabel {
+    margin-top: 13px;
+  }
+  .tablePanel {
+    padding: 16px;
+  }
+  .table {
+    min-width: 1050px;
+  }
+  .tablePanel .toolbar {
+    align-items: center;
+  }
+  .tablePanel .tools {
+    margin-left: auto;
+  }
+  .tablePanel .tabs {
+    flex: 0 0 auto;
+  }
+  .footer {
+    height: 78px;
+  }
+  .footer > div {
+    gap: 18px;
+  }
+}
 
-@media (max-width:640px){.mobileBar{height:52px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 13px;position:sticky;top:0;z-index:30}.mobileBar strong{font-size:13px}.mobileBar button{font-size:0;color:#777}.mobileBar button:after{content:"☰";font-size:16px}.mobileBar .logo{width:22px;height:22px}.page{padding:12px 8px 0}.pageHeader{height:auto}.pageHeader>div>h1,.pageHeader .crumbRow p,.newShipment{display:none}.crumbRow{margin:0}.viewSwitcher{position:fixed;z-index:31;right:38px;top:13px;background:#eee}.viewSwitcher button{height:25px;padding:0 6px}.viewSwitcher button span{display:none}.summaries{grid-template-columns:repeat(2,1fr);gap:12px;margin:4px 2px 16px}.summaries article{height:178px;padding:20px 14px}.summaries article>div{display:block}.summaries article>div>span{width:32px;height:32px;margin:0 0 13px}.summaries article p{font-size:13px}.summaries article button{display:none}.summaries strong{font-size:28px;margin-top:20px}.summaries small{float:none;display:flex;align-items:center;margin-top:13px;font-size:11px;white-space:nowrap}.summaries small i{margin-right:7px}.gridPanel,.tablePanel{border-radius:10px}.gridPanel .toolbar{background:#fff;border-radius:10px;padding:8px;margin-bottom:8px;display:flex;flex-direction:column-reverse;gap:7px}.toolbar{margin-bottom:10px}.tools{width:100%;gap:7px}.search,.tablePanel .search{width:auto;flex:1;background:#f3f3f3}.search input{display:block}.gridPanel .filter{display:none}.gridPanel .sortLabel{display:none}.gridPanel .date{width:34px;font-size:0;padding:0}.gridPanel .date:after{content:"☷";font-size:14px}.tabs{width:100%;height:30px;overflow:hidden}.tabs button{padding:0 10px;font-size:10px;flex:1}.cards{grid-template-columns:1fr;gap:8px}.shipmentCard{height:185px;border-radius:9px;padding:10px}.cardTop{height:39px;align-items:flex-start}.cardTop>div{display:flex;align-items:center;gap:5px}.cardTop>div>b{font-size:11px;margin:0}.status{font-size:7px;line-height:9px;padding:2px 5px}.freightIcon{order:-1;width:25px;height:25px;border-radius:6px;font-size:13px;position:absolute}.cardTop>div{padding-left:32px}.company{position:absolute;margin-top:-38px;right:19px;height:30px;max-width:145px}.companyMark{font-size:19px;width:22px;margin-right:5px}.company b{font-size:9px}.company small{font-size:7px;margin-top:1px}.routeBox{padding:5px 8px;margin-top:5px}.routeBox>div{min-height:32px;grid-template-columns:70px 1fr}.routeBox span{font-size:8px}.routeBox b{font-size:9px}.routeBox small{font-size:7px;margin-top:1px}.progressMeta{margin-top:6px;font-size:8px}.progressMeta b{font-size:9px}.progress{height:4px;margin-top:4px}.pager{height:57px;align-items:center}.gridPanel .pageSize{display:none}.gridPanel .pages{margin:auto}.tablePanel{padding:14px 12px}.tablePanel .toolbar{display:flex;flex-direction:column-reverse;gap:14px;align-items:stretch}.tablePanel .tools{width:100%;margin:0}.tablePanel .filter{width:38px;padding:0;font-size:0}.tablePanel .filter:after{content:"☷";font-size:14px}.tablePanel .date{width:38px;padding:0;font-size:0;background:#292929;color:#fff}.tablePanel .date:after{content:"+";font-size:22px}.tablePanel .tabs{height:44px}.tablePanel .tabs button{font-size:12px}.tableScroll{margin-top:5px}.table{min-width:780px;font-size:10px}.table th{height:43px}.table td{height:61px}.table th:nth-child(5),.table td:nth-child(5),.table th:nth-child(6),.table td:nth-child(6),.table th:nth-child(7),.table td:nth-child(7),.table th:nth-child(8),.table td:nth-child(8),.table th:nth-child(9),.table td:nth-child(9),.table th:nth-child(10),.table td:nth-child(10){display:none}.table td:nth-child(2){width:130px}.table td:nth-child(3){width:180px}.table td:nth-child(4){width:165px}.table .companyMark{font-size:21px}.tablePanel .pager{height:65px}.tablePanel .pageSize{display:none}.tablePanel .pages{width:100%;justify-content:space-between}.pages button{width:42px;height:42px}.footer{height:130px;justify-content:center;flex-direction:column;font-size:10px;text-align:center;gap:12px}.footer>div:first-child{display:grid;grid-template-columns:repeat(3,auto);gap:8px 14px}.footer b{grid-column:1/-1}.footer>div:last-child{font-size:16px}.sortLabel{display:none}}
+@media (max-width: 640px) {
+  .mobileBar {
+    height: 52px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 13px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+  .mobileBar strong {
+    font-size: 13px;
+  }
+  .mobileBar button {
+    font-size: 0;
+    color: #777;
+  }
+  .mobileBar button:after {
+    content: "☰";
+    font-size: 16px;
+  }
+  .mobileBar .logo {
+    width: 22px;
+    height: 22px;
+  }
+  .page {
+    padding: 12px 8px 0;
+  }
+  .pageHeader {
+    height: auto;
+  }
+  .pageHeader > div > h1,
+  .pageHeader .crumbRow p,
+  .newShipment {
+    display: none;
+  }
+  .crumbRow {
+    margin: 0;
+  }
+  .viewSwitcher {
+    position: fixed;
+    z-index: 31;
+    right: 38px;
+    top: 13px;
+    background: #eee;
+  }
+  .viewSwitcher button {
+    height: 25px;
+    padding: 0 6px;
+  }
+  .viewSwitcher button span {
+    display: none;
+  }
+  .summaries {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 4px 2px 16px;
+  }
+  .summaries article {
+    height: 178px;
+    padding: 20px 14px;
+  }
+  .summaryTop {
+    display: block;
+    height: auto;
+  }
+  .summaryIcon {
+    width: 32px;
+    height: 32px;
+    margin: 0 0 13px;
+  }
+  .summaries article p {
+    font-size: 13px;
+  }
+  .summaries article button {
+    display: none;
+  }
+  .summaries strong {
+    font-size: 28px;
+    margin-top: 20px;
+  }
+  .summaryBottom {
+    display: block;
+    height: auto;
+  }
+  .summaryTrend {
+    margin-top: 13px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .gridPanel,
+  .tablePanel {
+    border-radius: 10px;
+  }
+  .gridPanel .toolbar {
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 7px;
+  }
+  .toolbar {
+    margin-bottom: 10px;
+  }
+  .tools {
+    width: 100%;
+    gap: 7px;
+  }
+  .search,
+  .tablePanel .search {
+    width: auto;
+    flex: 1;
+    background: #f3f3f3;
+  }
+  .search input {
+    display: block;
+  }
+  .gridPanel .filter {
+    display: none;
+  }
+  .gridPanel .sortLabel {
+    display: none;
+  }
+  .gridPanel .date {
+    width: 34px;
+    font-size: 0;
+    padding: 0;
+  }
+  .gridPanel .date:after {
+    content: "☷";
+    font-size: 14px;
+  }
+  .tabs {
+    width: 100%;
+    height: 30px;
+    overflow: hidden;
+  }
+  .tabs button {
+    padding: 0 10px;
+    font-size: 10px;
+    flex: 1;
+  }
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .shipmentCard {
+    height: 185px;
+    border-radius: 9px;
+    padding: 10px;
+  }
+  .cardTop {
+    height: 39px;
+    align-items: flex-start;
+  }
+  .cardTop > div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .cardTop > div > b {
+    font-size: 11px;
+    margin: 0;
+  }
+  .status {
+    font-size: 7px;
+    line-height: 9px;
+    padding: 2px 5px;
+  }
+  .freightIcon {
+    order: -1;
+    width: 25px;
+    height: 25px;
+    border-radius: 6px;
+    font-size: 13px;
+    position: absolute;
+  }
+  .cardTop > div {
+    padding-left: 32px;
+  }
+  .company {
+    position: absolute;
+    margin-top: -38px;
+    right: 19px;
+    height: 30px;
+    max-width: 145px;
+  }
+  .companyMark {
+    font-size: 19px;
+    width: 22px;
+    margin-right: 5px;
+  }
+  .company b {
+    font-size: 9px;
+  }
+  .company small {
+    font-size: 7px;
+    margin-top: 1px;
+  }
+  .routeBox {
+    padding: 5px 8px;
+    margin-top: 5px;
+  }
+  .routeBox > div {
+    min-height: 32px;
+    grid-template-columns: 70px 1fr;
+  }
+  .routeBox span {
+    font-size: 8px;
+  }
+  .routeBox b {
+    font-size: 9px;
+  }
+  .routeBox small {
+    font-size: 7px;
+    margin-top: 1px;
+  }
+  .progressMeta {
+    margin-top: 6px;
+    font-size: 8px;
+  }
+  .progressMeta b {
+    font-size: 9px;
+  }
+  .progress {
+    height: 4px;
+    margin-top: 4px;
+  }
+  .pager {
+    height: 57px;
+    align-items: center;
+  }
+  .gridPanel .pageSize {
+    display: none;
+  }
+  .gridPanel .pages {
+    margin: auto;
+  }
+  .tablePanel {
+    padding: 14px 12px;
+  }
+  .tablePanel .toolbar {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 14px;
+    align-items: stretch;
+  }
+  .tablePanel .tools {
+    width: 100%;
+    margin: 0;
+  }
+  .tablePanel .filter {
+    width: 38px;
+    padding: 0;
+    font-size: 0;
+  }
+  .tablePanel .filter:after {
+    content: "☷";
+    font-size: 14px;
+  }
+  .tablePanel .date {
+    width: 38px;
+    padding: 0;
+    font-size: 0;
+    background: #292929;
+    color: #fff;
+  }
+  .tablePanel .date:after {
+    content: "+";
+    font-size: 22px;
+  }
+  .tablePanel .tabs {
+    height: 44px;
+  }
+  .tablePanel .tabs button {
+    font-size: 12px;
+  }
+  .tableScroll {
+    margin-top: 5px;
+  }
+  .table {
+    min-width: 780px;
+    font-size: 10px;
+  }
+  .table th {
+    height: 43px;
+  }
+  .table td {
+    height: 61px;
+  }
+  .table th:nth-child(5),
+  .table td:nth-child(5),
+  .table th:nth-child(6),
+  .table td:nth-child(6),
+  .table th:nth-child(7),
+  .table td:nth-child(7),
+  .table th:nth-child(8),
+  .table td:nth-child(8),
+  .table th:nth-child(9),
+  .table td:nth-child(9),
+  .table th:nth-child(10),
+  .table td:nth-child(10) {
+    display: none;
+  }
+  .table td:nth-child(2) {
+    width: 130px;
+  }
+  .table td:nth-child(3) {
+    width: 180px;
+  }
+  .table td:nth-child(4) {
+    width: 165px;
+  }
+  .table .companyMark {
+    font-size: 21px;
+  }
+  .tablePanel .pager {
+    height: 65px;
+  }
+  .tablePanel .pageSize {
+    display: none;
+  }
+  .tablePanel .pages {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .pages button {
+    width: 42px;
+    height: 42px;
+  }
+  .footer {
+    height: 130px;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 10px;
+    text-align: center;
+    gap: 12px;
+  }
+  .footer > div:first-child {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 8px 14px;
+  }
+  .footer b {
+    grid-column: 1/-1;
+  }
+  .footer > div:last-child {
+    font-size: 16px;
+  }
+  .sortLabel {
+    display: none;
+  }
+}
 
-.table td b small{display:inline;margin:0}
+.table td b small {
+  display: inline;
+  margin: 0;
+}
 
-@media (min-width:641px) and (max-width:1023px){.shipmentCard{height:330px}.shipmentCard .progressMeta{margin-top:50px}}
+@media (min-width: 641px) and (max-width: 1023px) {
+  .shipmentCard {
+    height: 330px;
+  }
+  .shipmentCard .progressMeta {
+    margin-top: 50px;
+  }
+}
 
-@media (max-width:640px){.shipmentCard{position:relative;height:312px}.shipmentCard .company{position:absolute;z-index:2;top:8px;right:10px;margin-top:0;height:30px;max-width:145px}.shipmentCard .routeBox>div{min-height:91px}.table{table-layout:fixed;min-width:570px}.table th:first-child,.table td:first-child{width:34px}.table th:nth-child(2),.table td:nth-child(2){width:110px}.table th:nth-child(3),.table td:nth-child(3){width:170px}.table th:nth-child(4),.table td:nth-child(4){width:155px}.table .company{position:static;margin-top:0;max-width:none}.gridPanel .date{background:#292929;color:#fff}.gridPanel .date:after{content:"+";font-size:20px}}
+@media (max-width: 640px) {
+  .shipmentCard {
+    position: relative;
+    height: 312px;
+  }
+  .shipmentCard .company {
+    position: absolute;
+    z-index: 2;
+    top: 8px;
+    right: 10px;
+    margin-top: 0;
+    height: 30px;
+    max-width: 145px;
+  }
+  .shipmentCard .routeBox > div {
+    min-height: 91px;
+  }
+  .table {
+    table-layout: fixed;
+    min-width: 570px;
+  }
+  .table th:first-child,
+  .table td:first-child {
+    width: 34px;
+  }
+  .table th:nth-child(2),
+  .table td:nth-child(2) {
+    width: 110px;
+  }
+  .table th:nth-child(3),
+  .table td:nth-child(3) {
+    width: 170px;
+  }
+  .table th:nth-child(4),
+  .table td:nth-child(4) {
+    width: 155px;
+  }
+  .table .company {
+    position: static;
+    margin-top: 0;
+    max-width: none;
+  }
+  .gridPanel .date {
+    background: #292929;
+    color: #fff;
+  }
+  .gridPanel .date:after {
+    content: "+";
+    font-size: 20px;
+  }
+}
 
-.drawerBackdrop{display:none}
-@media (max-width:640px){.drawerBackdrop{display:block;position:fixed;inset:0;z-index:50;background:rgb(0 0 0/35%)}.drawer{width:260px;height:100%;background:#fff;padding:18px 14px;box-shadow:8px 0 30px rgb(0 0 0/15%)}.drawerBrand{height:48px;display:flex;align-items:flex-start;justify-content:space-between;padding:4px 8px}.drawerBrand button{font-size:25px;line-height:20px}.drawer nav{display:flex;flex-direction:column;gap:6px;margin-top:12px}.drawer nav a{height:42px;border-radius:8px;display:flex;align-items:center;gap:14px;padding:0 13px;color:#6f6f73;font-size:13px}.drawer nav svg{width:19px;height:19px}.drawer nav .drawerActive{background:#ddd6fe;color:#5033b6;font-weight:600}}
+.drawerBackdrop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .tableScroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+
+  .table {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 10px;
+  }
+
+  /*
+   * Desktop column widths
+   * Total: 100%
+   */
+  .tableColumns col:nth-child(1) {
+    width: 3%;
+  }
+
+  .tableColumns col:nth-child(2) {
+    width: 10%;
+  }
+
+  .tableColumns col:nth-child(3) {
+    width: 13%;
+  }
+
+  .tableColumns col:nth-child(4) {
+    width: 8%;
+  }
+
+  .tableColumns col:nth-child(5) {
+    width: 10%;
+  }
+
+  .tableColumns col:nth-child(6) {
+    width: 7%;
+  }
+
+  .tableColumns col:nth-child(7) {
+    width: 16%;
+  }
+
+  .tableColumns col:nth-child(8) {
+    width: 16%;
+  }
+
+  .tableColumns col:nth-child(9) {
+    width: 8%;
+  }
+
+  .tableColumns col:nth-child(10) {
+    width: 9%;
+  }
+
+  .table th {
+    box-sizing: border-box;
+    width: auto;
+    height: 44px;
+    padding: 0 4px;
+    overflow: hidden;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .table th button {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    font: inherit;
+    white-space: nowrap;
+    text-overflow: clip;
+  }
+
+  .table td {
+    box-sizing: border-box;
+    width: auto;
+    height: 60px;
+    padding: 7px 4px;
+    overflow: hidden;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+  }
+
+  /*
+   * Checkbox
+   */
+  .table th:first-child,
+  .table td:first-child {
+    width: auto;
+    text-align: center;
+  }
+
+  /*
+   * Shipping ID
+   */
+  .table td:nth-child(2) {
+    white-space: nowrap;
+  }
+
+  .table td:nth-child(2) > b,
+  .table td:nth-child(2) > small {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /*
+   * Company
+   */
+  .table .company {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+  }
+
+  .table .companyMark {
+    flex: 0 0 22px;
+    width: 22px;
+    margin-right: 0;
+    text-align: center;
+    font-size: 21px;
+  }
+
+  .table .company > span:last-child {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .table .company b,
+  .table .company small {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /*
+   * Carrier
+   */
+  .table td:nth-child(4) {
+    min-width: 0;
+  }
+
+  .table td:nth-child(4) > b,
+  .table td:nth-child(4) > small {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /*
+   * Product Category
+   */
+  .table td:nth-child(5) {
+    min-width: 0;
+    padding-right: 10px;
+    overflow: hidden;
+    line-height: 1.3;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+
+  .table th:nth-child(5) {
+    padding-right: 10px;
+  }
+
+  /*
+   * Weight
+   */
+  .table td:nth-child(6) {
+    padding-left: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .table th:nth-child(6) {
+    padding-left: 10px;
+  }
+
+  /*
+   * Route
+   */
+  .table td:nth-child(7) {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .table td:nth-child(7) > b {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 10px;
+    line-height: 16px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /*
+   * Date
+   */
+  .table td:nth-child(8) {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .table td:nth-child(8) > b {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 9.5px;
+    line-height: 16px;
+    white-space: nowrap;
+    text-overflow: clip;
+  }
+
+  .table td:nth-child(8) > b small {
+    display: inline;
+    margin: 0;
+    font-size: 9px;
+  }
+
+  /*
+   * Progress
+   */
+  .table td:nth-child(9) {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .tableProgress {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  .tableProgress > i {
+    display: block;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 34px;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #eee;
+  }
+
+  .tableProgress > i span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: #8065f4;
+  }
+
+  .tableProgress > b {
+    display: block;
+    flex: 0 0 auto;
+    font-size: 9px;
+    font-weight: 500;
+  }
+
+  /*
+   * Status
+   */
+  .table td:nth-child(10) {
+    overflow: visible;
+    white-space: nowrap;
+  }
+
+  .tableStatus {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    color: #333;
+    font-size: 9px;
+    font-weight: 400;
+    line-height: 14px;
+    white-space: nowrap;
+  }
+
+  .tableStatus > i {
+    display: block;
+    flex: 0 0 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #b9a8ff;
+  }
+
+  .tableStatusDelivery {
+    background: #f4f3f6;
+  }
+
+  .tableStatusCompleted {
+    background: #e1f8ea;
+    color: #237b55;
+  }
+
+  .tableStatusCompleted > i {
+    background: #21b66f;
+  }
+
+  .tableStatusPending {
+    background: #eeeeef;
+  }
+
+  .tableStatusPending > i {
+    background: #858589;
+  }
+}
+@media (max-width: 640px) {
+  .drawerBackdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: rgb(0 0 0/35%);
+  }
+  .drawer {
+    width: 260px;
+    height: 100%;
+    background: #fff;
+    padding: 18px 14px;
+    box-shadow: 8px 0 30px rgb(0 0 0/15%);
+  }
+  .drawerBrand {
+    height: 48px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 4px 8px;
+  }
+  .drawerBrand button {
+    font-size: 25px;
+    line-height: 20px;
+  }
+  .drawer nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .drawer nav a {
+    height: 42px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 13px;
+    color: #6f6f73;
+    font-size: 13px;
+  }
+  .drawer nav svg {
+    width: 19px;
+    height: 19px;
+  }
+  .drawer nav .drawerActive {
+    background: #ddd6fe;
+    color: #5033b6;
+    font-weight: 600;
+  }
+}
