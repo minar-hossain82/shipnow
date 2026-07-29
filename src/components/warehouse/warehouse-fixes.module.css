@@ -1,4 +1,4 @@
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
   :global(.warehouse-mobile-grid) {
     min-width: 0;
     grid-template-columns: 220px minmax(0, 1fr) 365px;

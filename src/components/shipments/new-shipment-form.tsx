@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import {
-  ChangeEvent,
   FormEvent,
   ReactNode,
   useRef,
@@ -11,32 +10,49 @@ import {
 import { AuthenticatedSidebarContent } from "@/components/dashboard/authenticated-sidebar-content";
 import styles from "./new-shipment.module.css";
 
-type Errors = {
-  deliveryAddress?: string;
-  shippingMethod?: string;
+type FormValues = {
+  senderCompany:string; senderEmail:string; senderPhoneCountryCode:string; senderPhone:string; pickupAddress:string;
+  recipientCompany:string; recipientEmail:string; recipientPhoneCountryCode:string; recipientPhone:string; deliveryAddress:string;
+  description:string; quantity:string; value:string; weight:string; units:string; length:string; width:string; height:string;
+  freightType:string; carrier:string; shippingMethod:string; shipmentId:string; shipmentDate:string; notes:string;
+  services:string[]; notify:boolean;
 };
+type FieldName = keyof FormValues;
+type Errors = Partial<Record<FieldName,string>>;
+type Touched = Partial<Record<FieldName,boolean>>;
+
+const initialValues:FormValues = {
+  senderCompany:"GreenHaven", senderEmail:"logistics@greenhaven.com", senderPhoneCountryCode:"+1", senderPhone:"408-555-7210", pickupAddress:"1120 Birch Street, Portland, OR 97205, USA",
+  recipientCompany:"FreshNest", recipientEmail:"warehouse@freshnest.com", recipientPhoneCountryCode:"+1", recipientPhone:"786-555-4432", deliveryAddress:"",
+  description:"Premium Garden Tool Set", quantity:"40", value:"$3,200", weight:"125", units:"Kg", length:"80", width:"60", height:"",
+  freightType:"Road Freight", carrier:"FedEx", shippingMethod:"", shipmentId:"#SH9583742", shipmentDate:"March 21, 2035", notes:"",
+  services:["Insurance Coverage","Signature on Delivery","Temperature Control"], notify:true,
+};
+const initialErrors:Errors = { deliveryAddress:"Delivery address is required.", shippingMethod:"Shipping method is required." };
 
 type FieldProps = {
   label: string;
   name: string;
-  defaultValue?: string;
+  value: string;
   placeholder?: string;
   type?: string;
   disabled?: boolean;
   error?: string;
-  onInput?: () => void;
+  onChange: (value:string) => void;
+  onBlur: () => void;
   className?: string;
 };
 
 function Field({
   label,
   name,
-  defaultValue,
+  value,
   placeholder,
   type = "text",
   disabled = false,
   error,
-  onInput,
+  onChange,
+  onBlur,
   className = "",
 }: FieldProps) {
   return (
@@ -46,32 +62,36 @@ function Field({
       <input
         name={name}
         type={type}
-        defaultValue={defaultValue}
+        value={value}
         placeholder={placeholder}
         disabled={disabled}
         className={error ? styles.invalid : ""}
-        onInput={onInput}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error?`${name}-error`:undefined}
+        onChange={(event)=>onChange(event.currentTarget.value)}
+        onBlur={onBlur}
       />
 
-      {error && <small role="alert">{error}</small>}
+      {error && <small id={`${name}-error`} role="alert">{error}</small>}
     </label>
   );
 }
 
-function Phone({ name, value }: { name: string; value: string }) {
+function Phone({name,countryCode,value,error,onCountryCodeChange,onChange,onBlur}:{name:"senderPhone"|"recipientPhone";countryCode:string;value:string;error?:string;onCountryCodeChange:(value:string)=>void;onChange:(value:string)=>void;onBlur:()=>void}) {
   return (
     <label className={styles.field}>
       <span>Phone Number</span>
 
-      <div className={styles.phone}>
+      <div className={`${styles.phone} ${error?styles.invalid:""}`}>
         <span className={styles.phoneFlag} aria-hidden="true" />
 
-        <select aria-label="Country code" name={`${name}CountryCode`}>
+        <select aria-label="Country code" name={`${name}CountryCode`} value={countryCode} onChange={(event)=>onCountryCodeChange(event.currentTarget.value)}>
           <option value="+1">+1</option>
         </select>
 
-        <input name={name} defaultValue={value} aria-label="Phone number" />
+        <input name={name} value={value} aria-label="Phone number" aria-invalid={Boolean(error)} aria-describedby={error?`${name}-error`:undefined} onChange={(event)=>onChange(event.currentTarget.value)} onBlur={onBlur}/>
       </div>
+      {error&&<small id={`${name}-error`} role="alert">{error}</small>}
     </label>
   );
 }
@@ -80,8 +100,10 @@ type SelectFieldProps = {
   label: string;
   name: string;
   children: ReactNode;
+  value:string;
   error?: string;
-  onChange?: () => void;
+  onChange:(value:string)=>void;
+  onBlur:()=>void;
   className?: string;
 };
 
@@ -89,8 +111,10 @@ function SelectField({
   label,
   name,
   children,
+  value,
   error,
   onChange,
+  onBlur,
   className = "",
 }: SelectFieldProps) {
   return (
@@ -99,13 +123,17 @@ function SelectField({
 
       <select
         name={name}
+        value={value}
         className={error ? styles.invalid : ""}
-        onChange={onChange}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error?`${name}-error`:undefined}
+        onChange={(event)=>onChange(event.currentTarget.value)}
+        onBlur={onBlur}
       >
         {children}
       </select>
 
-      {error && <small role="alert">{error}</small>}
+      {error && <small id={`${name}-error`} role="alert">{error}</small>}
     </label>
   );
 }
@@ -133,62 +161,86 @@ function Footer() {
 
 export function NewShipmentForm() {
   const formRef = useRef<HTMLFormElement>(null);
-
-  const [errors, setErrors] = useState<Errors>({
-    deliveryAddress: "Address is required.",
-    shippingMethod: "Shipping method is required.",
-  });
-
+  const [formValues,setFormValues] = useState<FormValues>(()=>({...initialValues,services:[...initialValues.services]}));
+  const [errors,setErrors] = useState<Errors>(initialErrors);
+  const [touched,setTouched] = useState<Touched>({});
+  const [submitAttempted,setSubmitAttempted] = useState(false);
+  const [isSubmitting,setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [navOpen, setNavOpen] = useState(false);
-  const [form, setForm] = useState({ height: "" });
 
-  const handleHeightChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const nextValue = event.target.value.replace(/[^\d.]/g, "");
+  const emailIsValid = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+  const getEmailError = (value: string) => {
+    if (!value.trim()) return "Email is required.";
+    if (!emailIsValid(value)) return "Please enter a valid email address.";
+    return undefined;
+  };
+  const requiredMessages:Partial<Record<FieldName,string>> = {
+    senderCompany:"Company is required.",senderPhone:"Phone number is required.",pickupAddress:"Pickup address is required.",
+    recipientCompany:"Company is required.",recipientPhone:"Phone number is required.",deliveryAddress:"Delivery address is required.",
+    description:"Item description is required.",quantity:"Quantity is required.",value:"Value is required.",weight:"Weight is required.",units:"Unit is required.",
+    length:"Length is required.",width:"Width is required.",height:"Height is required.",freightType:"Freight type is required.",carrier:"Carrier is required.",
+    shippingMethod:"Shipping method is required.",shipmentDate:"Shipment date is required.",
+  };
+  const numericLabels = {quantity:"Quantity",value:"Value",weight:"Weight",length:"Length",width:"Width",height:"Height"} as const;
+  const validatedFields = ["senderCompany","senderEmail","senderPhone","pickupAddress","recipientCompany","recipientEmail","recipientPhone","deliveryAddress","description","quantity","value","weight","units","length","width","height","freightType","carrier","shippingMethod","shipmentDate"] as const;
 
-    setForm((current) => ({
-      ...current,
-      height: nextValue,
-    }));
+  const getFieldError = (name:typeof validatedFields[number],value:string,values:FormValues=formValues) => {
+    if(name==="senderEmail"||name==="recipientEmail") return getEmailError(value);
+    if(!value.trim()) return requiredMessages[name];
+    if(name==="senderPhone"||name==="recipientPhone") {
+      const countryCode=name==="senderPhone"?values.senderPhoneCountryCode:values.recipientPhoneCountryCode;
+      const digits=`${countryCode}${value}`.replace(/\D/g,"");
+      if(!/^[\d\s()-]+$/.test(value)||digits.length<10) return "Please enter a valid phone number.";
+    }
+    if(name in numericLabels) {
+      const normalized=name==="value"?value.replace(/[$,\s]/g,""):value.trim();
+      const numericPattern=name==="quantity"?/^\d+$/:/^\d+(?:\.\d+)?$/;
+      if(!numericPattern.test(normalized)||Number(normalized)<=0) return `${numericLabels[name as keyof typeof numericLabels]} must be greater than 0.`;
+    }
+    return undefined;
   };
 
-  const clear = (key: keyof Errors) => {
-    setErrors((current) => ({
-      ...current,
-      [key]: undefined,
-    }));
+  const updateError = (name:typeof validatedFields[number],value:string,values:FormValues,force=false) => {
+    const nextError=getFieldError(name,value,values);
+    setErrors(current=>{
+      if(!nextError) return {...current,[name]:undefined};
+      return force||touched[name]||submitAttempted||current[name]?{...current,[name]:nextError}:current;
+    });
   };
+
+  const changeField = (name:typeof validatedFields[number],value:string) => {
+    const nextValues={...formValues,[name]:value};
+    if((name==="freightType"||name==="carrier")&&formValues.shippingMethod) nextValues.shippingMethod="";
+    setFormValues(nextValues);
+    updateError(name,value,nextValues);
+    if(name==="freightType"||name==="carrier") updateError("shippingMethod",nextValues.shippingMethod,nextValues,true);
+    setMessage(""); setIsSubmitting(false);
+  };
+
+  const blurField = (name:typeof validatedFields[number]) => {
+    setTouched(current=>({...current,[name]:true}));
+    updateError(name,String(formValues[name]),formValues,true);
+  };
+  const bindField = (name:typeof validatedFields[number]) => ({value:String(formValues[name]),error:errors[name],onChange:(value:string)=>changeField(name,value),onBlur:()=>blurField(name)});
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const data = new FormData(event.currentTarget);
+    if(isSubmitting)return;
     const next: Errors = {};
-
-    if (!String(data.get("deliveryAddress") || "").trim()) {
-      next.deliveryAddress = "Address is required.";
-    }
-
-    if (!data.get("shippingMethod")) {
-      next.shippingMethod = "Shipping method is required.";
-    }
-
+    validatedFields.forEach(name=>{const error=getFieldError(name,String(formValues[name]));if(error)next[name]=error});
+    setSubmitAttempted(true);
+    setTouched(Object.fromEntries(validatedFields.map(name=>[name,true])) as Touched);
     setErrors(next);
-    setMessage(
-      Object.keys(next).length ? "" : "Shipment submitted successfully.",
-    );
+    const firstInvalid=validatedFields.find(name=>next[name]);
+    if(firstInvalid){setMessage("");requestAnimationFrame(()=>{const field=formRef.current?.querySelector<HTMLElement>(`[name="${firstInvalid}"]`);field?.focus();field?.scrollIntoView({behavior:"smooth",block:"center"})});return;}
+    setIsSubmitting(true);
+    setMessage("Shipment submitted successfully.");
   };
 
   const reset = () => {
-    formRef.current?.reset();
-    setForm({ height: "" });
-
-    setErrors({
-      deliveryAddress: "Address is required.",
-      shippingMethod: "Shipping method is required.",
-    });
-
-    setMessage("");
+    setFormValues({...initialValues,services:[...initialValues.services]});
+    setErrors(initialErrors); setTouched({}); setSubmitAttempted(false); setIsSubmitting(false); setMessage("");
   };
 
   return (
@@ -254,7 +306,7 @@ export function NewShipmentForm() {
               <Field
                 label="Company"
                 name="senderCompany"
-                defaultValue="GreenHaven"
+                {...bindField("senderCompany")}
               />
 
               <div className={styles.two}>
@@ -262,16 +314,16 @@ export function NewShipmentForm() {
                   label="Email"
                   name="senderEmail"
                   type="email"
-                  defaultValue="logistics@greenhaven.com"
+                  {...bindField("senderEmail")}
                 />
 
-                <Phone name="senderPhone" value="408-555-7210" />
+                <Phone name="senderPhone" countryCode={formValues.senderPhoneCountryCode} value={formValues.senderPhone} error={errors.senderPhone} onCountryCodeChange={(value)=>{const next={...formValues,senderPhoneCountryCode:value};setFormValues(next);updateError("senderPhone",next.senderPhone,next);setMessage("");setIsSubmitting(false)}} onChange={(value)=>changeField("senderPhone",value)} onBlur={()=>blurField("senderPhone")}/>
               </div>
 
               <Field
                 label="Pickup Address"
                 name="pickupAddress"
-                defaultValue="1120 Birch Street, Portland, OR 97205, USA"
+                {...bindField("pickupAddress")}
               />
             </fieldset>
 
@@ -281,7 +333,7 @@ export function NewShipmentForm() {
               <Field
                 label="Company"
                 name="recipientCompany"
-                defaultValue="FreshNest"
+                {...bindField("recipientCompany")}
               />
 
               <div className={styles.two}>
@@ -289,18 +341,17 @@ export function NewShipmentForm() {
                   label="Email"
                   name="recipientEmail"
                   type="email"
-                  defaultValue="warehouse@freshnest.com"
+                  {...bindField("recipientEmail")}
                 />
 
-                <Phone name="recipientPhone" value="786-555-4432" />
+                <Phone name="recipientPhone" countryCode={formValues.recipientPhoneCountryCode} value={formValues.recipientPhone} error={errors.recipientPhone} onCountryCodeChange={(value)=>{const next={...formValues,recipientPhoneCountryCode:value};setFormValues(next);updateError("recipientPhone",next.recipientPhone,next);setMessage("");setIsSubmitting(false)}} onChange={(value)=>changeField("recipientPhone",value)} onBlur={()=>blurField("recipientPhone")}/>
               </div>
 
               <Field
                 label="Delivery Address"
                 name="deliveryAddress"
                 placeholder="Street address, city, state/province, ZIP code"
-                error={errors.deliveryAddress}
-                onInput={() => clear("deliveryAddress")}
+                {...bindField("deliveryAddress")}
               />
             </fieldset>
           </div>
@@ -312,7 +363,7 @@ export function NewShipmentForm() {
               <Field
                 label="Item Description"
                 name="description"
-                defaultValue="Premium Garden Tool Set"
+                {...bindField("description")}
               />
 
               <div className={styles.packageGrid}>
@@ -320,22 +371,22 @@ export function NewShipmentForm() {
                   label="Quantity"
                   name="quantity"
                   type="number"
-                  defaultValue="40"
+                  {...bindField("quantity")}
                 />
 
                 <Field
                   label="Value"
                   name="value"
-                  defaultValue="$3,200"
+                  {...bindField("value")}
                 />
 
                 <Field
                   label="Weight"
                   name="weight"
-                  defaultValue="125"
+                  {...bindField("weight")}
                 />
 
-                <SelectField label="Units" name="units">
+                <SelectField label="Units" name="units" {...bindField("units")}>
                   <option>Kg</option>
                   <option>Lb</option>
                 </SelectField>
@@ -345,36 +396,44 @@ export function NewShipmentForm() {
 
               <div className={styles.dimensions}>
                 <label>
-                  <div className={styles.dimensionField}>
+                  <div className={`${styles.dimensionField} ${errors.length?styles.dimensionInvalid:""}`}>
                     <input
                       name="length"
-                      defaultValue="80"
+                      value={formValues.length}
                       aria-label="Length in centimeters"
+                      aria-invalid={Boolean(errors.length)}
+                      aria-describedby={errors.length?"length-error":undefined}
+                      onChange={(event)=>changeField("length",event.currentTarget.value)}
+                      onBlur={()=>blurField("length")}
                     />
 
                     <span className={styles.dimensionUnit}>cm</span>
                   </div>
 
-                  <small>Length</small>
+                  <small id={errors.length?"length-error":undefined} className={errors.length?styles.dimensionError:undefined} role={errors.length?"alert":undefined}>{errors.length||"Length"}</small>
                 </label>
 
                 <label>
-                  <div className={styles.dimensionField}>
+                  <div className={`${styles.dimensionField} ${errors.width?styles.dimensionInvalid:""}`}>
                     <input
                       name="width"
-                      defaultValue="60"
+                      value={formValues.width}
                       aria-label="Width in centimeters"
+                      aria-invalid={Boolean(errors.width)}
+                      aria-describedby={errors.width?"width-error":undefined}
+                      onChange={(event)=>changeField("width",event.currentTarget.value)}
+                      onBlur={()=>blurField("width")}
                     />
 
                     <span className={styles.dimensionUnit}>cm</span>
                   </div>
 
-                  <small>Width</small>
+                  <small id={errors.width?"width-error":undefined} className={errors.width?styles.dimensionError:undefined} role={errors.width?"alert":undefined}>{errors.width||"Width"}</small>
                 </label>
 
                 <label>
-                  <div className={styles.heightDimensionField}>
-                    {!form.height && (
+                  <div className={`${styles.heightDimensionField} ${errors.height?styles.dimensionInvalid:""}`}>
+                    {!formValues.height && (
                       <span
                         className={styles.heightPlaceholder}
                         aria-hidden="true"
@@ -387,15 +446,18 @@ export function NewShipmentForm() {
                       name="height"
                       type="text"
                       inputMode="decimal"
-                      value={form.height}
+                      value={formValues.height}
                       aria-label="Height in centimeters"
-                      onChange={handleHeightChange}
+                      aria-invalid={Boolean(errors.height)}
+                      aria-describedby={errors.height?"height-error":undefined}
+                      onChange={(event)=>changeField("height",event.currentTarget.value)}
+                      onBlur={()=>blurField("height")}
                     />
 
                     <span className={styles.heightDimensionUnit}>cm</span>
                   </div>
 
-                  <small>Height</small>
+                  <small id={errors.height?"height-error":undefined} className={errors.height?styles.dimensionError:undefined} role={errors.height?"alert":undefined}>{errors.height||"Height"}</small>
                 </label>
               </div>
             </fieldset>
@@ -411,22 +473,26 @@ export function NewShipmentForm() {
                   "Rail Freight",
                   "Ocean Freight",
                   "Air Freight",
-                ].map((item, index) => (
+                ].map((item) => (
                   <label key={item}>
                     <input
                       type="radio"
                       name="freightType"
                       value={item}
-                      defaultChecked={index === 0}
+                      checked={formValues.freightType===item}
+                      aria-describedby={errors.freightType?"freightType-error":undefined}
+                      onChange={(event)=>changeField("freightType",event.currentTarget.value)}
+                      onBlur={()=>blurField("freightType")}
                     />
 
                     <span>{item}</span>
                   </label>
                 ))}
               </div>
+              {errors.freightType&&<small id="freightType-error" className={styles.choiceError} role="alert">{errors.freightType}</small>}
 
               <div className={styles.shippingGrid}>
-                <SelectField label="Carrier" name="carrier">
+                <SelectField label="Carrier" name="carrier" {...bindField("carrier")}>
                   <option>FedEx</option>
                   <option>DHL</option>
                   <option>UPS</option>
@@ -435,8 +501,7 @@ export function NewShipmentForm() {
                 <SelectField
                   label="Shipping Method"
                   name="shippingMethod"
-                  error={errors.shippingMethod}
-                  onChange={() => clear("shippingMethod")}
+                  {...bindField("shippingMethod")}
                 >
                   <option value="">Select Method</option>
                   <option>Express</option>
@@ -447,8 +512,10 @@ export function NewShipmentForm() {
                   <Field
                     label="Shipment ID"
                     name="shipmentId"
-                    defaultValue="#SH9583742"
+                    value={formValues.shipmentId}
                     disabled
+                    onChange={()=>undefined}
+                    onBlur={()=>undefined}
                   />
 
                   <small className={styles.help}>Auto-generated</small>
@@ -457,7 +524,7 @@ export function NewShipmentForm() {
                 <Field
                   label="Shipment Date"
                   name="shipmentDate"
-                  defaultValue="March 21, 2035"
+                  {...bindField("shipmentDate")}
                 />
               </div>
 
@@ -467,6 +534,8 @@ export function NewShipmentForm() {
                 <textarea
                   name="notes"
                   placeholder="Add special delivery notes (optional)"
+                  value={formValues.notes}
+                  onChange={(event)=>{setFormValues(current=>({...current,notes:event.currentTarget.value}));setMessage("");setIsSubmitting(false)}}
                 />
               </label>
 
@@ -482,13 +551,14 @@ export function NewShipmentForm() {
                       "Signature on Delivery",
                       "Temperature Control",
                       "Fragile Item Handling",
-                    ].map((item, index) => (
+                    ].map((item) => (
                       <label key={item}>
                         <input
                           type="checkbox"
                           name="services"
                           value={item}
-                          defaultChecked={index < 3}
+                          checked={formValues.services.includes(item)}
+                          onChange={()=>{setFormValues(current=>({...current,services:current.services.includes(item)?current.services.filter(value=>value!==item):[...current.services,item]}));setMessage("");setIsSubmitting(false)}}
                         />
 
                         <span>{item}</span>
@@ -503,7 +573,7 @@ export function NewShipmentForm() {
                   </span>
 
                   <label className={styles.switch}>
-                    <input type="checkbox" name="notify" defaultChecked />
+                    <input type="checkbox" name="notify" checked={formValues.notify} onChange={(event)=>{setFormValues(current=>({...current,notify:event.currentTarget.checked}));setMessage("");setIsSubmitting(false)}} />
                     <i />
                     <span>Notify Recipient via Email/SMS</span>
                   </label>
@@ -519,7 +589,7 @@ export function NewShipmentForm() {
               Delete Form
             </button>
 
-            <button type="submit">Submit Shipment</button>
+            <button type="submit" disabled={isSubmitting}>Submit Shipment</button>
           </div>
         </form>
 

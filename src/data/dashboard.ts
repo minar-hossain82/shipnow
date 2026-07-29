@@ -5,14 +5,14 @@ export const metrics = [
 ] as const;
 
 export const chartData = [
-  { month: "Jan", shipments: 1300, revenue: 43000, cost: 30000 },
-  { month: "Feb", shipments: 2000, revenue: 37000, cost: 26000 },
-  { month: "Mar", shipments: 1000, revenue: 51000, cost: 42000 },
-  { month: "Apr", shipments: 1900, revenue: 71000, cost: 39000 },
-  { month: "May", shipments: 3124, revenue: 87524, cost: 45680 },
-  { month: "Jan ", shipments: 2500, revenue: 79000, cost: 45000 },
-  { month: "Jul", shipments: 3600, revenue: 61000, cost: 50000 },
-  { month: "Aug", shipments: 4300, revenue: 69000, cost: 37000 },
+  { month: "Jan", year: 2030, shipments: 1300, revenue: 43000, cost: 30000 },
+  { month: "Feb", year: 2030, shipments: 2000, revenue: 37000, cost: 26000 },
+  { month: "Mar", year: 2030, shipments: 1000, revenue: 51000, cost: 42000 },
+  { month: "Apr", year: 2030, shipments: 1900, revenue: 71000, cost: 39000 },
+  { month: "May", year: 2030, shipments: 3124, revenue: 87524, cost: 45680 },
+  { month: "Jun", year: 2030, shipments: 2500, revenue: 79000, cost: 45000 },
+  { month: "Jul", year: 2030, shipments: 3600, revenue: 61000, cost: 50000 },
+  { month: "Aug", year: 2030, shipments: 4300, revenue: 69000, cost: 37000 },
 ];
 
 export const freight = [

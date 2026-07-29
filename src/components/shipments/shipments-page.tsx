@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Icon } from "@/components/dashboard/icons";
@@ -9,9 +9,18 @@ import { shipments, type Shipment, type ShipmentStatus, type ShipmentTableStatus
 import styles from "./shipments.module.css";
 
 type View = "grid" | "table";
-type SortKey = "id" | "company" | "carrier" | "product" | "weight" | "origin" | "departure" | "progress" | "status";
+type SortKey = "id" | "company" | "carrier" | "product" | "weight" | "route" | "departure" | "progress" | "tableStatus";
+type SortDirection = "ascending" | "descending";
+type GridSort = "newest" | "oldest" | "progress-desc" | "progress-asc" | "company-asc" | "company-desc";
+type GridFilters = { carriers:string[]; freight:string[]; statuses:string[] };
 const statuses = ["All", "Delivered", "In Transit", "Processing", "Out for Delivery"] as const;
 const tableStatuses = ["All", "Completed", "Delivery", "Pending"] as const;
+const emptyGridFilters: GridFilters = { carriers:[], freight:[], statuses:[] };
+const gridSortOptions: Array<{value:GridSort;label:string}> = [
+  {value:"newest",label:"Newest"}, {value:"oldest",label:"Oldest"},
+  {value:"progress-desc",label:"Progress: High to Low"}, {value:"progress-asc",label:"Progress: Low to High"},
+  {value:"company-asc",label:"Company: A to Z"}, {value:"company-desc",label:"Company: Z to A"},
+];
 
 function LogoMark({ word = false }: { word?: boolean }) {
   return <span className={styles.logo}><i/><i/>{word && <b>SHIPNOW</b>}</span>;
@@ -79,9 +88,57 @@ function Search({ value, onChange, placeholder }: { value: string; onChange: (va
   return <label className={styles.search}><Icon name="search"/><input value={value} onChange={event=>onChange(event.target.value)} placeholder={placeholder} aria-label={placeholder}/></label>;
 }
 
-function Pager({ page, pages, pageSize, setPage, setPageSize, grid }: { page:number; pages:number; pageSize:number; setPage:(page:number)=>void; setPageSize:(size:number)=>void; grid:boolean }) {
+function Pager({ page, pages, pageSize, total, start, end, setPage, setPageSize, grid }: { page:number; pages:number; pageSize:number; total:number; start:number; end:number; setPage:(page:number)=>void; setPageSize:(size:number)=>void; grid:boolean }) {
   const visible = [1, 2, 3, Math.max(4, pages)].filter((value,index,array)=>value<=pages && array.indexOf(value)===index);
-  return <div className={styles.pager}><div className={styles.pageSize}>Show <select value={pageSize} onChange={event=>setPageSize(Number(event.target.value))}><option>6</option><option>12</option><option>24</option></select> of {grid ? "520" : "1,240"} results</div><div className={styles.pages}><button disabled={page===1} onClick={()=>setPage(page-1)}>‹</button>{visible.map((value,index)=><span key={value}>{index>0 && value-visible[index-1]>1 && <i>…</i>}<button className={page===value?styles.current:""} onClick={()=>setPage(value)}>{value}</button></span>)}<button disabled={page===pages} onClick={()=>setPage(page+1)}>›</button></div></div>;
+  const sizes = grid ? [6,12,24] : [12,24,48];
+  return <div className={styles.pager}><div className={styles.pageSize}>Show <select aria-label="Results per page" value={pageSize} onChange={event=>setPageSize(Number(event.target.value))}>{sizes.map(size=><option key={size} value={size}>{size}</option>)}</select><span>Showing {start}–{end} of {total} results</span></div><nav className={styles.pages} aria-label="Shipment table pagination"><button type="button" aria-label="Previous page" disabled={page===1} onClick={()=>setPage(page-1)}>‹</button>{visible.map((value,index)=><span key={value}>{index>0 && value-visible[index-1]>1 && <i aria-hidden="true">…</i>}<button type="button" aria-label={`Page ${value}`} aria-current={page===value?"page":undefined} className={page===value?styles.current:""} onClick={()=>setPage(value)}>{value}</button></span>)}<button type="button" aria-label="Next page" disabled={page===pages} onClick={()=>setPage(page+1)}>›</button></nav></div>;
+}
+
+const textCollator = new Intl.Collator(undefined,{ sensitivity:"base" });
+const numericId = (value:string) => Number(value.replace(/\D/g,""));
+const numericWeight = (value:string) => Number(value.replace(/[^\d.]/g,""));
+const shipmentDate = (value:string) => {
+  const match = value.match(/([A-Za-z]{3})\s+(\d{1,2}),\s+(\d{4}).*?(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if(!match) return 0;
+  const months = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+  let hour = Number(match[4]) % 12;
+  if(match[6].toUpperCase()==="PM") hour += 12;
+  return Date.UTC(Number(match[3]),months.indexOf(match[1].toLowerCase()),Number(match[2]),hour,Number(match[5]));
+};
+
+function compareShipments(a:Shipment,b:Shipment,key:SortKey) {
+  switch(key) {
+    case "id": return numericId(a.id)-numericId(b.id);
+    case "weight": return numericWeight(a.weight)-numericWeight(b.weight);
+    case "departure": return shipmentDate(a.departure)-shipmentDate(b.departure);
+    case "progress": return a.progress-b.progress;
+    case "route": return textCollator.compare(`${a.origin} ${a.destination}`,`${b.origin} ${b.destination}`);
+    case "tableStatus": return textCollator.compare(a.tableStatus,b.tableStatus);
+    default: return textCollator.compare(a[key],b[key]);
+  }
+}
+
+function compareGridShipments(a:Shipment,b:Shipment,sort:GridSort) {
+  switch(sort) {
+    case "newest": return shipmentDate(b.departure)-shipmentDate(a.departure);
+    case "oldest": return shipmentDate(a.departure)-shipmentDate(b.departure);
+    case "progress-desc": return b.progress-a.progress;
+    case "progress-asc": return a.progress-b.progress;
+    case "company-desc": return textCollator.compare(b.company,a.company);
+    default: return textCollator.compare(a.company,b.company);
+  }
+}
+
+function focusMenuItem(container:HTMLElement,current:EventTarget & HTMLElement,direction:1|-1) {
+  const items = Array.from(container.querySelectorAll<HTMLElement>('[role="menuitem"], input:not([disabled])'));
+  const next = items[(items.indexOf(current)+direction+items.length)%items.length];
+  next?.focus();
+}
+
+function menuKeyDown(event:React.KeyboardEvent<HTMLElement>,container:HTMLElement|null) {
+  if(!container || (event.key!=="ArrowDown" && event.key!=="ArrowUp")) return;
+  event.preventDefault();
+  focusMenuItem(container,event.currentTarget,event.key==="ArrowDown"?1:-1);
 }
 
 function ShipmentCard({ shipment }: { shipment: Shipment }) {
@@ -120,37 +177,79 @@ export function ShipmentsPage() {
   const [view,setViewState] = useState<View>(initialView);
   const [query,setQuery] = useState("");
   const [status,setStatus] = useState<string>("All");
-  const [sort,setSort] = useState<SortKey | null>(null);
-  const [ascending,setAscending] = useState(true);
+  const [sortKey,setSortKey] = useState<SortKey | null>(null);
+  const [sortDirection,setSortDirection] = useState<SortDirection>("ascending");
   const [page,setPage] = useState(1);
   const [pageSize,setPageSizeState] = useState(12);
   const [selected,setSelected] = useState<Set<string>>(new Set());
   const [monthOnly,setMonthOnly] = useState(false);
+  const [gridSort,setGridSort] = useState<GridSort>("newest");
+  const [appliedFilters,setAppliedFilters] = useState<GridFilters>(emptyGridFilters);
+  const [draftFilters,setDraftFilters] = useState<GridFilters>(emptyGridFilters);
+  const [filterOpen,setFilterOpen] = useState(false);
+  const [sortOpen,setSortOpen] = useState(false);
   const [drawerOpen,setDrawerOpen] = useState(false);
+  const selectPageRef = useRef<HTMLInputElement>(null);
+  const filterRef = useRef<HTMLDivElement>(null);
+  const sortRef = useRef<HTMLDivElement>(null);
 
-  const setView = (next:View) => { setViewState(next); setStatus("All"); setPage(1); router.replace(`/shipments?view=${next}`, { scroll:false }); };
+  const setView = (next:View) => { setViewState(next); if(next==="grid"&&pageSize===48)setPageSizeState(24); setStatus("All"); setPage(1); router.replace(`/shipments?view=${next}`, { scroll:false }); };
   const setPageSize = (size:number) => { setPageSizeState(size); setPage(1); };
-  const filtered = useMemo(()=>shipments.filter(item=>{
-    const mapped = status === "Completed" ? "Delivered" : status === "Delivery" ? "Out for Delivery" : status === "Pending" ? "Processing" : status;
-    return (mapped === "All" || item.status === mapped) && (!query || `${item.id} ${item.company} ${item.carrier} ${item.origin} ${item.destination}`.toLowerCase().includes(query.toLowerCase())) && (!monthOnly || item.departure.startsWith("Mar"));
-  }).sort((a,b)=>sort ? String(a[sort]).localeCompare(String(b[sort]),undefined,{numeric:true})*(ascending?1:-1) : 0),[query,status,sort,ascending,monthOnly]);
-  const pages = Math.max(1,Math.ceil(filtered.length/pageSize));
-  const pageItems = filtered.slice((page-1)*pageSize,page*pageSize);
-  const chooseSort = (key:SortKey) => { if(sort===key)setAscending(value=>!value);else{setSort(key);setAscending(true);} };
+  const filterOptions = useMemo(()=>({
+    carriers:[...new Set(shipments.map(item=>item.carrier))].sort(textCollator.compare),
+    freight:[...new Set(shipments.map(item=>item.freight))].sort(textCollator.compare),
+    statuses:[...new Set(shipments.map(item=>item.status === "Delivered" ? "Completed" : item.status))].sort(textCollator.compare),
+  }),[]);
+  const filteredShipments = useMemo(()=>shipments.filter(item=>{
+    const matchesStatus = status === "All" || (view === "table" ? item.tableStatus === status : item.status === status);
+    const searchable = `${item.id} ${item.company} ${item.carrier} ${item.category} ${item.product} ${item.weight} ${item.origin} ${item.destination} ${item.status} ${item.tableStatus}`;
+    const displayStatus = item.status === "Delivered" ? "Completed" : item.status;
+    const matchesPopover = view === "table" ||
+      (!appliedFilters.carriers.length || appliedFilters.carriers.includes(item.carrier)) &&
+      (!appliedFilters.freight.length || appliedFilters.freight.includes(item.freight)) &&
+      (!appliedFilters.statuses.length || appliedFilters.statuses.includes(displayStatus));
+    return matchesStatus && (!query || searchable.toLocaleLowerCase().includes(query.toLocaleLowerCase())) && matchesPopover && (!monthOnly || item.departure.startsWith("Mar"));
+  }),[query,status,monthOnly,view,appliedFilters]);
+  const sortedShipments = useMemo(()=>view === "grid" ? [...filteredShipments].sort((a,b)=>compareGridShipments(a,b,gridSort)) : sortKey ? [...filteredShipments].sort((a,b)=>compareShipments(a,b,sortKey)*(sortDirection==="ascending"?1:-1)) : filteredShipments,[filteredShipments,view,gridSort,sortKey,sortDirection]);
+  const pages = Math.max(1,Math.ceil(sortedShipments.length/pageSize));
+  const currentPage = Math.min(page,pages);
+  const pageItems = useMemo(()=>sortedShipments.slice((currentPage-1)*pageSize,currentPage*pageSize),[sortedShipments,currentPage,pageSize]);
+  const resultStart = sortedShipments.length ? (currentPage-1)*pageSize+1 : 0;
+  const resultEnd = Math.min(currentPage*pageSize,sortedShipments.length);
+  const chooseSort = (key:SortKey) => { if(sortKey===key)setSortDirection(value=>value==="ascending"?"descending":"ascending");else{setSortKey(key);setSortDirection("ascending");} };
   const toggle = (id:string) => setSelected(current=>{const next=new Set(current);if(next.has(id))next.delete(id);else next.add(id);return next;});
   const allSelected = pageItems.length>0 && pageItems.every(item=>selected.has(item.id));
+  const someSelected = pageItems.some(item=>selected.has(item.id)) && !allSelected;
   const toggleAll = () => setSelected(current=>{const next=new Set(current);pageItems.forEach(item=>allSelected?next.delete(item.id):next.add(item.id));return next;});
   const activeTabs = view === "grid" ? statuses : tableStatuses;
+  const activeFilterCount = appliedFilters.carriers.length+appliedFilters.freight.length+appliedFilters.statuses.length;
+  const gridSortLabel = gridSortOptions.find(option=>option.value===gridSort)?.label ?? "Newest";
+  const toggleDraftFilter = (key:keyof GridFilters,value:string) => setDraftFilters(current=>({...current,[key]:current[key].includes(value)?current[key].filter(item=>item!==value):[...current[key],value]}));
 
-  return <><MobileBar open={()=>setDrawerOpen(true)}/>{drawerOpen&&<MobileDrawer close={()=>setDrawerOpen(false)}/>}<main className={styles.page}>
+  useEffect(()=>{if(selectPageRef.current)selectPageRef.current.indeterminate=someSelected},[someSelected]);
+  useEffect(()=>{
+    if(!filterOpen && !sortOpen) return;
+    const close = (event:MouseEvent) => {
+      if(filterOpen && !filterRef.current?.contains(event.target as Node)) setFilterOpen(false);
+      if(sortOpen && !sortRef.current?.contains(event.target as Node)) setSortOpen(false);
+    };
+    const key = (event:KeyboardEvent) => { if(event.key==="Escape"){setFilterOpen(false);setSortOpen(false);} };
+    document.addEventListener("mousedown",close); document.addEventListener("keydown",key);
+    return ()=>{document.removeEventListener("mousedown",close);document.removeEventListener("keydown",key)};
+  },[filterOpen,sortOpen]);
+
+  return <><MobileBar open={()=>setDrawerOpen(true)}/>{drawerOpen&&<MobileDrawer close={()=>setDrawerOpen(false)}/>}<main className={`${styles.page} ${view === "table" ? styles.tableView : styles.gridView}`}>
     <header className={styles.pageHeader}><div><h1>Shipments</h1><div className={styles.crumbRow}><p><b>Dashboard</b><span>/</span>Shipments</p><ViewSwitcher view={view} setView={setView}/></div></div><Link href="/shipments/new" className={styles.newShipment}><Icon name="plus"/>New Shipment</Link></header>
     {view === "table" && <SummaryCards/>}
     <div className={view === "table" ? styles.tablePanel : styles.gridPanel}>
-      <div className={styles.toolbar}><div className={styles.tabs}>{activeTabs.map(tab=><button type="button" className={status===tab?styles.activeTab:""} key={tab} onClick={()=>{setStatus(tab);setPage(1)}}>{tab}</button>)}</div><div className={styles.tools}><Search value={query} onChange={value=>{setQuery(value);setPage(1)}} placeholder={view==="grid"?"Search Shipment":"Search id, company, etc"}/><button type="button" className={styles.filter} onClick={()=>setStatus(current=>current==="All"?"Delivered":"All")}>⌯ <span>Filter</span></button>{view==="table"?<button type="button" className={styles.date} onClick={()=>setMonthOnly(value=>!value)}>▣ <span>{monthOnly?"All Dates":"This Month"}⌄</span></button>:<><span className={styles.sortLabel}>Sort by:</span><button type="button" className={styles.date} onClick={()=>{setSort("departure");setAscending(value=>!value)}}>Newest<NewestChevron/></button></>}</div></div>
-      {view === "grid" ? <div className={styles.cards}>{pageItems.map(item=><ShipmentCard shipment={item} key={item.id}/>)}</div> : <div className={styles.tableScroll}><table className={styles.table}><colgroup className={styles.tableColumns}><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/></colgroup><thead><tr><th><input type="checkbox" checked={allSelected} onChange={toggleAll} aria-label="Select page"/></th><SortHead label="Shipping ID" value="id" action={chooseSort}/><SortHead label="Company" value="company" action={chooseSort}/><SortHead label="Carriers" value="carrier" action={chooseSort}/><SortHead label="Product Category" value="product" action={chooseSort}/><SortHead label="Weight" value="weight" action={chooseSort}/><SortHead label="Route" value="origin" action={chooseSort}/><SortHead label="Date" value="departure" action={chooseSort}/><SortHead label="Progress" value="progress" action={chooseSort}/><SortHead label="Status" value="status" action={chooseSort}/></tr></thead><tbody>{pageItems.map(item=><tr key={item.id} className={selected.has(item.id)?styles.selectedRow:""}><td><input type="checkbox" checked={selected.has(item.id)} onChange={()=>toggle(item.id)} aria-label={`Select ${item.id}`}/></td><td><b className={styles.shipmentId}>{item.id}</b><small>{item.freight}</small></td><td><Company shipment={item}/></td><td><b>{item.carrier}</b><small>{item.category}</small></td><td>{item.product}</td><td>{item.weight}</td><td><b>{item.origin} <small>(Origin)</small></b><b className={styles.destination}>{item.destination} <small>(Destination)</small></b></td><td><b>{item.departure} <small>(ATD)</small></b><b className={styles.destination}>{item.arrival} <small>(ETA)</small></b></td><td><div className={styles.tableProgress}><i><span style={{width:`${item.progress}%`}}/></i><b>{item.progress}%</b></div></td><td><TableStatusPill status={item.tableStatus}/></td></tr>)}</tbody></table></div>}
-      <Pager page={page} pages={pages} pageSize={pageSize} setPage={setPage} setPageSize={setPageSize} grid={view==="grid"}/>
+      <div className={styles.toolbar}><div className={styles.tabs}>{activeTabs.map(tab=><button type="button" className={status===tab?styles.activeTab:""} key={tab} onClick={()=>{setStatus(tab);setPage(1)}}>{tab}</button>)}</div><div className={styles.tools}><Search value={query} onChange={value=>{setQuery(value);setPage(1)}} placeholder={view==="grid"?"Search Shipment":"Search id, company, etc"}/>{view==="grid"?<div className={styles.menuWrap} ref={filterRef}><button type="button" className={`${styles.filter} ${activeFilterCount?styles.filterActive:""}`} aria-haspopup="dialog" aria-expanded={filterOpen} onClick={()=>{setDraftFilters(appliedFilters);setFilterOpen(value=>!value);setSortOpen(false)}}>⌯ <span>Filter</span>{activeFilterCount>0&&<b className={styles.filterCount}>{activeFilterCount}</b>}</button>{filterOpen&&<div className={styles.filterMenu} role="dialog" aria-label="Filter shipments">{([['carriers','Carrier'],['freight','Shipment Type'],['statuses','Status']] as const).map(([key,label])=><fieldset key={key}><legend>{label}</legend>{filterOptions[key].map(value=><label key={value}><input type="checkbox" checked={draftFilters[key].includes(value)} onChange={()=>toggleDraftFilter(key,value)} onKeyDown={event=>menuKeyDown(event,filterRef.current)}/><span>{value}</span></label>)}</fieldset>)}<div className={styles.filterActions}><button type="button" onClick={()=>{setDraftFilters(emptyGridFilters);setAppliedFilters(emptyGridFilters);setPage(1);setFilterOpen(false)}}>Clear Filters</button><button type="button" onClick={()=>{setAppliedFilters(draftFilters);setPage(1);setFilterOpen(false)}}>Apply Filters</button></div></div>}</div>:<button type="button" className={styles.filter} onClick={()=>{setStatus(current=>current==="All"?"Completed":"All");setPage(1)}}>⌯ <span>Filter</span></button>}{view==="table"?<button type="button" className={styles.date} onClick={()=>{setMonthOnly(value=>!value);setPage(1)}}>▣ <span>{monthOnly?"All Dates":"This Month"}⌄</span></button>:<><span className={styles.sortLabel}>Sort by:</span><div className={styles.menuWrap} ref={sortRef}><button type="button" className={styles.date} aria-haspopup="menu" aria-expanded={sortOpen} onClick={()=>{setSortOpen(value=>!value);setFilterOpen(false)}}>{gridSortLabel}<NewestChevron/></button>{sortOpen&&<div className={styles.sortMenu} role="menu" aria-label="Sort shipments">{gridSortOptions.map(option=><button type="button" role="menuitem" aria-current={gridSort===option.value?"true":undefined} className={gridSort===option.value?styles.menuSelected:""} key={option.value} onKeyDown={event=>menuKeyDown(event,sortRef.current)} onClick={()=>{setGridSort(option.value);setPage(1);setSortOpen(false)}}>{option.label}</button>)}</div>}</div></>}</div></div>
+      {view === "grid" ? <div className={styles.cards}>{pageItems.map(item=><ShipmentCard shipment={item} key={item.id}/>)}</div> : <div className={styles.tableScroll}><table className={styles.table}><colgroup className={styles.tableColumns}><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/></colgroup><thead><tr><th><input ref={selectPageRef} type="checkbox" checked={allSelected} aria-checked={someSelected?"mixed":allSelected} onChange={toggleAll} aria-label="Select all shipments on this page"/></th><SortHead label="Shipping ID" value="id" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Company" value="company" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Carriers" value="carrier" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Product Category" value="product" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Weight" value="weight" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Route" value="route" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Date" value="departure" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Progress" value="progress" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Status" value="tableStatus" sortKey={sortKey} direction={sortDirection} action={chooseSort}/></tr></thead><tbody>{pageItems.map(item=><tr key={item.id} className={selected.has(item.id)?styles.selectedRow:""}><td><input type="checkbox" checked={selected.has(item.id)} onChange={()=>toggle(item.id)} aria-label={`Select ${item.id}`}/></td><td><b className={styles.shipmentId}>{item.id}</b><small>{item.freight}</small></td><td><Company shipment={item}/></td><td><b>{item.carrier}</b><small>{item.category}</small></td><td>{item.product}</td><td>{item.weight}</td><td><b>{item.origin} <small>(Origin)</small></b><b className={styles.destination}>{item.destination} <small>(Destination)</small></b></td><td><b>{item.departure} <small>(ATD)</small></b><b className={styles.destination}>{item.arrival} <small>(ETA)</small></b></td><td><div className={styles.tableProgress}><i><span style={{width:`${item.progress}%`}}/></i><b>{item.progress}%</b></div></td><td><TableStatusPill status={item.tableStatus}/></td></tr>)}</tbody></table></div>}
+      <Pager page={currentPage} pages={pages} pageSize={pageSize} total={sortedShipments.length} start={resultStart} end={resultEnd} setPage={setPage} setPageSize={setPageSize} grid={view==="grid"}/>
     </div><Footer/>
   </main></>;
 }
 
-function SortHead({label,value,action}:{label:string;value:SortKey;action:(value:SortKey)=>void}) { return <th><button type="button" onClick={()=>action(value)}>{label} ↕</button></th>; }
+function SortHead({label,value,sortKey,direction,action}:{label:string;value:SortKey;sortKey:SortKey|null;direction:SortDirection;action:(value:SortKey)=>void}) {
+  const active = sortKey===value;
+  return <th aria-sort={active?direction:"none"}><button type="button" aria-label={`Sort by ${label} ${active&&direction==="ascending"?"descending":"ascending"}`} onClick={()=>action(value)}>{label} {active?(direction==="ascending"?"↑":"↓"):"↕"}</button></th>;
+}

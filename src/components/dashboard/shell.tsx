@@ -9,10 +9,10 @@ import { AuthenticatedSidebarContent } from "./authenticated-sidebar-content";
 import styles from "./dashboard.module.css";
 
 const primary: [string, DashboardIcon, string][] = [
-  ["Dashboard", "grid", "/dashboard"], ["Analytics", "chart", "#"],
-  ["Calendar", "calendar", "#"], ["Shipments", "truck", "/shipments"],
-  ["Tracking", "route", "#"], ["Warehouse", "warehouse", "/warehouse"],
-  ["Fleets", "fleet", "#"], ["Drivers", "driver", "#"],
+  ["Dashboard", "grid", "/dashboard"], ["Analytics", "chart", "/analytics"],
+  ["Calendar", "calendar", "/calendar"], ["Shipments", "truck", "/shipments"],
+  ["Tracking", "route", "/tracking"], ["Warehouse", "warehouse", "/warehouse"],
+  ["Fleets", "fleet", "/fleets"], ["Drivers", "driver", "/drivers"],
   ["Invoices & Billing", "invoice", "/invoices"],
 ];
 const secondary: [string, DashboardIcon, string][] = [
@@ -27,7 +27,7 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   return <>
     <button aria-label="Close navigation" className={`${styles.scrim} ${open ? styles.scrimOpen : ""}`} onClick={onClose} />
     <aside className={`shared-sidebar ${styles.sidebar} ${open ? styles.sidebarOpen : ""}`}>
-      <div className={styles.desktopSidebar}><SidebarHeader onClose={onClose} /><nav className="shared-sidebar-nav"><ul>{primary.map(item => <li key={item[0]}><Link href={item[2]} className={item[0] === "Dashboard" ? styles.active : ""} onClick={onClose}><Icon name={item[1]} /><span>{item[0]}</span></Link></li>)}</ul><hr/><ul>{secondary.map(item => <li key={item[0]}><button><Icon name={item[1]} /><span>{item[0]}</span>{item[2] && <b>{item[2]}</b>}</button></li>)}</ul></nav><div className={`shared-sidebar-promo ${styles.sidebarPromo}`}><SidebarPromoCard/></div></div>
+      <div className={styles.desktopSidebar}><SidebarHeader onClose={onClose} /><nav className="shared-sidebar-nav"><ul>{primary.map(item => <li key={item[0]}><Link href={item[2]} className={item[0] === "Dashboard" ? styles.active : ""} onClick={onClose} onKeyDown={event=>{if(event.key===" "){event.preventDefault();event.currentTarget.click()}}}><Icon name={item[1]} /><span>{item[0]}</span></Link></li>)}</ul><hr/><ul>{secondary.map(item => <li key={item[0]}><button><Icon name={item[1]} /><span>{item[0]}</span>{item[2] && <b>{item[2]}</b>}</button></li>)}</ul></nav><div className={`shared-sidebar-promo ${styles.sidebarPromo}`}><SidebarPromoCard/></div></div>
       <div className={styles.mobileSidebar}><AuthenticatedSidebarContent active="Dashboard" onNavigate={onClose} onClose={onClose}/></div>
     </aside>
   </>;

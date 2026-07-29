@@ -3,7 +3,7 @@ import { Icon, type IconName } from "./icons";
 import { SidebarHeader } from "./sidebar-header";
 import { SidebarPromoCard } from "./sidebar-promo-card";
 
-const primary: Array<[string, IconName, string]> = [["Dashboard","grid","/dashboard"],["Analytics","chart","#"],["Calendar","calendar","#"],["Shipments","truck","/shipments"],["Tracking","route","#"],["Warehouse","warehouse","/warehouse"],["Fleets","fleet","#"],["Drivers","driver","#"],["Invoices & Billing","invoice","/invoices"]];
+const primary: Array<[string, IconName, string]> = [["Dashboard","grid","/dashboard"],["Analytics","chart","/analytics"],["Calendar","calendar","/calendar"],["Shipments","truck","/shipments"],["Tracking","route","/tracking"],["Warehouse","warehouse","/warehouse"],["Fleets","fleet","/fleets"],["Drivers","driver","/drivers"],["Invoices & Billing","invoice","/invoices"]];
 const secondary: Array<[string, IconName, string?]> = [["Message","message","19"],["Notification","bell","5"],["Settings","settings"]];
 
 function NavItem({ item, active=false }: { item: [string, IconName, string?]; active?: boolean }) {

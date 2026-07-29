@@ -218,6 +218,10 @@
   align-items: center;
   gap: 10px;
 }
+.menuWrap {
+  position: relative;
+  flex: 0 0 auto;
+}
 .search {
   height: 38px;
   width: 238px;
@@ -248,6 +252,108 @@
   background: #fff;
   padding: 0 14px;
   font-size: 13px;
+}
+.filterActive {
+  color: #6248cf;
+  box-shadow: inset 0 0 0 1px #8065f4;
+}
+.filterCount {
+  min-width: 17px;
+  height: 17px;
+  display: inline-grid;
+  place-items: center;
+  margin-left: 6px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #8065f4;
+  color: #fff;
+  font-size: 10px;
+  line-height: 1;
+}
+.filterMenu,
+.sortMenu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 300px;
+  max-width: calc(100vw - 32px);
+  max-height: min(520px, calc(100vh - 120px));
+  overflow-y: auto;
+  border: 1px solid #e7e7e7;
+  border-radius: 11px;
+  background: #fff;
+  padding: 14px;
+  box-shadow: 0 10px 28px rgb(30 30 35 / 14%);
+}
+.filterMenu fieldset {
+  margin: 0;
+  padding: 0 0 12px;
+  border: 0;
+}
+.filterMenu fieldset + fieldset {
+  padding-top: 10px;
+  border-top: 1px solid #ededed;
+}
+.filterMenu legend {
+  margin-bottom: 7px;
+  color: #292929;
+  font-size: 12px;
+  font-weight: 700;
+}
+.filterMenu label {
+  min-height: 29px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #555;
+  font-size: 12px;
+  cursor: pointer;
+}
+.filterMenu input {
+  width: 15px;
+  height: 15px;
+  accent-color: #8065f4;
+}
+.filterActions {
+  display: flex;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid #ededed;
+}
+.filterActions button {
+  min-height: 36px;
+  flex: 1;
+  border-radius: 8px;
+  background: #f2f2f2;
+  color: #555;
+  font-size: 11px;
+  font-weight: 600;
+}
+.filterActions button:last-child {
+  background: #292929;
+  color: #fff;
+}
+.sortMenu {
+  width: 205px;
+  padding: 6px;
+}
+.sortMenu button {
+  width: 100%;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  border-radius: 7px;
+  padding: 0 10px;
+  color: #555;
+  font-size: 12px;
+  text-align: left;
+}
+.sortMenu button:hover,
+.sortMenu button:focus-visible,
+.menuSelected {
+  background: #eeeaff;
+  color: #6248cf;
 }
 .tablePanel .filter,
 .tablePanel .date {
@@ -652,6 +758,12 @@
   }
   .filter span {
     display: none;
+  }
+  .menuWrap .filterCount {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    margin: 0;
   }
   .sortLabel {
     margin-top: 13px;
@@ -1502,6 +1614,18 @@
     color: #5033b6;
     font-weight: 600;
   }
+  .gridPanel .menuWrap .filter {
+    width: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gridPanel .menuWrap .filterCount {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    margin: 0;
+  }
 }
 
 @media (max-width: 1023px) {
@@ -1622,5 +1746,374 @@
   .table td:nth-child(4) {
     width: 139px;
     min-width: 139px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  :global(.shipments-shell):has(.tableView) {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  :global(.shipments-shell):has(.tableView) :global(.dashboard-sidebar) {
+    width: 48px;
+  }
+
+  :global(.shipments-shell):has(.tableView) :global(.dashboard-sidebar) :global(.nav-label),
+  :global(.shipments-shell):has(.tableView) :global(.dashboard-sidebar) :global(.nav-badge),
+  :global(.shipments-shell):has(.tableView) :global(.dashboard-sidebar) > div:last-child {
+    display: none;
+  }
+
+  :global(.shipments-shell):has(.tableView) :global(.dashboard-sidebar) nav {
+    margin-top: 20px;
+    padding-inline: 8px;
+  }
+
+  :global(.shipments-shell):has(.tableView) :global(.dashboard-sidebar) nav ul {
+    gap: 8px;
+  }
+
+  :global(.shipments-shell):has(.tableView) :global(.dashboard-sidebar) nav a,
+  :global(.shipments-shell):has(.tableView) :global(.dashboard-sidebar) nav button {
+    justify-content: center;
+    height: 36px;
+    padding-inline: 0;
+  }
+
+  :global(.shipments-shell):has(.tableView) :global(.dashboard-sidebar) :global(.nav-icon) {
+    width: 19px;
+    height: 19px;
+    margin-right: 0;
+  }
+
+  :global(.shipments-shell):has(.tableView) :global(.dashboard-sidebar) nav > div {
+    margin-block: 54px 12px;
+  }
+
+  :global(.shipments-shell):has(.tableView) > :global(.shipments-main) {
+    min-width: 0;
+    max-width: calc(100% - 48px);
+    margin-left: 48px;
+    overflow-x: hidden;
+  }
+
+  .tableView {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 24px 20px 0;
+    overflow-x: hidden;
+  }
+
+  .tableView .pageHeader {
+    height: 108px;
+  }
+
+  .tableView .pageHeader h1 {
+    font-size: 26px;
+    line-height: 30px;
+  }
+
+  .tableView .crumbRow {
+    margin-top: 6px;
+  }
+
+  .tableView .newShipment {
+    height: 44px;
+    padding-inline: 20px;
+    font-size: 14px;
+  }
+
+  .tableView .summaries {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px 20px;
+    margin: 3px 0 30px;
+  }
+
+  .tableView .summaries article {
+    height: 150px;
+    padding: 24px;
+  }
+
+  .tableView .summaries strong {
+    margin-top: 0;
+    font-size: 30px;
+    line-height: 34px;
+  }
+
+  .tableView .summaryBottom {
+    height: 69px;
+  }
+
+  .tableView .tablePanel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 16px;
+    overflow: hidden;
+  }
+
+  .tableView .tablePanel .toolbar {
+    min-width: 0;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .tableView .tablePanel .tabs {
+    height: 52px;
+    min-width: 0;
+  }
+
+  .tableView .tablePanel .tabs button {
+    padding-inline: 20px;
+    font-size: 13px;
+  }
+
+  .tableView .tablePanel .tools {
+    flex: 0 0 auto;
+    gap: 10px;
+    margin-left: auto;
+  }
+
+  .tableView .tablePanel .search,
+  .tableView .tablePanel .filter {
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .tableView .tablePanel .date {
+    height: 52px;
+    padding-inline: 16px;
+    font-size: 13px;
+  }
+
+  .tableView .tableScroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+
+  .tableView .table {
+    width: 1420px;
+    min-width: 1420px;
+    table-layout: fixed;
+    font-size: 11px;
+  }
+
+  .tableView .tableColumns col:nth-child(1) { width: 40px; }
+  .tableView .tableColumns col:nth-child(2) { width: 140px; }
+  .tableView .tableColumns col:nth-child(3) { width: 180px; }
+  .tableView .tableColumns col:nth-child(4) { width: 140px; }
+  .tableView .tableColumns col:nth-child(5) { width: 150px; }
+  .tableView .tableColumns col:nth-child(6) { width: 100px; }
+  .tableView .tableColumns col:nth-child(7) { width: 210px; }
+  .tableView .tableColumns col:nth-child(8) { width: 200px; }
+  .tableView .tableColumns col:nth-child(9) { width: 140px; }
+  .tableView .tableColumns col:nth-child(10) { width: 120px; }
+
+  .tableView .table th {
+    width: auto;
+    height: 46px;
+    padding: 0 8px;
+    overflow: visible;
+  }
+
+  .tableView .table td {
+    width: auto;
+    height: 66px;
+    padding: 7px 8px;
+    overflow: visible;
+  }
+
+  .tableView .table th:nth-child(n),
+  .tableView .table td:nth-child(n) {
+    display: table-cell;
+  }
+
+  .tableView .pager {
+    height: 65px;
+    align-items: flex-end;
+    font-size: 13px;
+  }
+
+  .tableView .pageSize select,
+  .tableView .pages button {
+    height: 38px;
+  }
+
+  .tableView .pages button {
+    width: 38px;
+  }
+
+  .tableView .footer {
+    height: 80px;
+    font-size: 11px;
+  }
+
+  .tableView .footer > div {
+    gap: 18px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  :global(.shipments-shell):has(.gridView) {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  :global(.shipments-shell):has(.gridView) :global(.dashboard-sidebar) {
+    width: 48px;
+  }
+
+  :global(.shipments-shell):has(.gridView) :global(.dashboard-sidebar) :global(.nav-label),
+  :global(.shipments-shell):has(.gridView) :global(.dashboard-sidebar) :global(.nav-badge),
+  :global(.shipments-shell):has(.gridView) :global(.dashboard-sidebar) > div:last-child {
+    display: none;
+  }
+
+  :global(.shipments-shell):has(.gridView) :global(.dashboard-sidebar) nav {
+    margin-top: 20px;
+    padding-inline: 8px;
+  }
+
+  :global(.shipments-shell):has(.gridView) :global(.dashboard-sidebar) nav ul {
+    gap: 8px;
+  }
+
+  :global(.shipments-shell):has(.gridView) :global(.dashboard-sidebar) nav a,
+  :global(.shipments-shell):has(.gridView) :global(.dashboard-sidebar) nav button {
+    justify-content: center;
+    height: 36px;
+    padding-inline: 0;
+  }
+
+  :global(.shipments-shell):has(.gridView) :global(.dashboard-sidebar) :global(.nav-icon) {
+    width: 19px;
+    height: 19px;
+    margin-right: 0;
+  }
+
+  :global(.shipments-shell):has(.gridView) :global(.dashboard-sidebar) nav > div {
+    margin-block: 54px 12px;
+  }
+
+  :global(.shipments-shell):has(.gridView) > :global(.shipments-main) {
+    min-width: 0;
+    max-width: calc(100% - 48px);
+    margin-left: 48px;
+    overflow-x: hidden;
+  }
+
+  .gridView {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 20px 16px 0;
+    overflow-x: hidden;
+  }
+
+  .gridView .pageHeader {
+    height: 65px;
+  }
+
+  .gridView .pageHeader h1 {
+    font-size: 24px;
+    line-height: 30px;
+  }
+
+  .gridView .newShipment {
+    height: 38px;
+  }
+
+  .gridView .gridPanel,
+  .gridView .gridPanel .toolbar {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .gridView .gridPanel .toolbar {
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .gridView .gridPanel .tabs {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .gridView .gridPanel .tabs button {
+    padding-inline: 15px;
+    font-size: 13px;
+  }
+
+  .gridView .gridPanel .tools {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+
+  .gridView .gridPanel .search {
+    width: 38px;
+    padding-inline: 10px;
+  }
+
+  .gridView .gridPanel .search input,
+  .gridView .gridPanel .filter span {
+    display: none;
+  }
+
+  .gridView .gridPanel .filter {
+    width: 38px;
+    padding: 0;
+  }
+
+  .gridView .gridPanel .sortLabel {
+    margin-top: 13px;
+  }
+
+  .gridView .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+    row-gap: 16px;
+  }
+
+  .gridView .shipmentCard {
+    width: 100%;
+    min-width: 0;
+    min-height: 330px;
+    padding: 16px;
+  }
+
+  .gridView .shipmentCard .progressMeta {
+    margin-top: 50px;
+  }
+
+  .gridView .pager {
+    height: 65px;
+    font-size: 13px;
+  }
+
+  .gridView .pageSize select,
+  .gridView .pages button {
+    height: 38px;
+  }
+
+  .gridView .pages button {
+    width: 38px;
+  }
+
+  .gridView .footer {
+    height: 78px;
+    font-size: 11px;
+  }
+
+  .gridView .footer > div {
+    gap: 18px;
   }
 }
