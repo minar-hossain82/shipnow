@@ -1503,3 +1503,124 @@
     font-weight: 600;
   }
 }
+
+@media (max-width: 1023px) {
+  .tableScroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+
+  .table {
+    width: 1320px;
+    min-width: 1320px;
+  }
+
+  .tableColumns col:nth-child(8) {
+    width: 200px;
+  }
+
+  .tableColumns col:nth-child(9) {
+    width: 140px;
+  }
+
+  .tableColumns col:nth-child(10) {
+    width: 120px;
+  }
+
+  .table th:nth-child(8),
+  .table td:nth-child(8) {
+    width: 200px;
+    min-width: 200px;
+  }
+
+  .table th:nth-child(9),
+  .table td:nth-child(9) {
+    width: 140px;
+    min-width: 140px;
+  }
+
+  .table th:nth-child(10),
+  .table td:nth-child(10) {
+    width: 120px;
+    min-width: 120px;
+  }
+
+  .tableStatus {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    color: #333;
+    font-size: 9px;
+    font-weight: 400;
+    line-height: 14px;
+    white-space: nowrap;
+  }
+
+  .tableStatus > i {
+    display: block;
+    flex: 0 0 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #b9a8ff;
+  }
+
+  .tableStatusDelivery {
+    background: #f4f3f6;
+  }
+
+  .tableStatusCompleted {
+    background: #e1f8ea;
+    color: #237b55;
+  }
+
+  .tableStatusCompleted > i {
+    background: #21b66f;
+  }
+
+  .tableStatusPending {
+    background: #eeeeef;
+  }
+
+  .tableStatusPending > i {
+    background: #858589;
+  }
+
+  .table th:nth-child(5),
+  .table td:nth-child(5),
+  .table th:nth-child(6),
+  .table td:nth-child(6),
+  .table th:nth-child(7),
+  .table td:nth-child(7),
+  .table th:nth-child(8),
+  .table td:nth-child(8),
+  .table th:nth-child(9),
+  .table td:nth-child(9),
+  .table th:nth-child(10),
+  .table td:nth-child(10) {
+    display: table-cell;
+  }
+}
+
+@media (max-width: 640px) {
+  .table {
+    width: 1304px;
+    min-width: 1304px;
+  }
+
+  .tableColumns col:nth-child(4) {
+    width: 139px;
+  }
+
+  .table th:nth-child(4),
+  .table td:nth-child(4) {
+    width: 139px;
+    min-width: 139px;
+  }
+}
