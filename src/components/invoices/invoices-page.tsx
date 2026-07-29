@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Icon } from "@/components/dashboard/icons";
+import { AuthenticatedSidebarContent } from "@/components/dashboard/authenticated-sidebar-content";
 import { CompanyLogo } from "@/components/shipments/shipments-page";
 import { invoices, type Invoice } from "@/data/invoices";
 import styles from "./invoices.module.css";
@@ -10,7 +10,7 @@ import styles from "./invoices.module.css";
 const money=(value:number)=>value.toLocaleString("en-US",{style:"currency",currency:"USD",minimumFractionDigits:2});
 
 function MobileBar({open}:{open:()=>void}){return <header className={styles.mobileBar}><i/><strong>Invoices & Billing</strong><button type="button" onClick={open}>☰</button></header>}
-function Drawer({close}:{close:()=>void}){return <div className={styles.drawerBack} onClick={close}><aside onClick={event=>event.stopPropagation()}><button onClick={close}>×</button><nav><Link href="/dashboard"><Icon name="grid"/>Dashboard</Link><Link href="/shipments"><Icon name="truck"/>Shipments</Link><Link className={styles.active} href="/invoices"><Icon name="invoice"/>Invoices & Billing</Link></nav></aside></div>}
+function Drawer({close}:{close:()=>void}){return <div className={styles.drawerBack} onClick={close}><aside onClick={event=>event.stopPropagation()}><AuthenticatedSidebarContent active="Invoices & Billing" onNavigate={close} onClose={close}/></aside></div>}
 function Footer(){return <footer className={styles.footer}><div><b>Copyright © 2025 Peterdraw</b><span>Privacy Policy</span><span>Term and conditions</span><span>Contact</span></div><div><span>ⓕ</span><span>𝕏</span><span>◎</span><span>▷</span><span>in</span></div></footer>}
 
 function PaidInvoiceIcon(){return <svg aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2.75 17.1 5l3.82-.12.92 3.7 3.16 2.14-1.4 3.55 1.4 3.55-3.16 2.14-.92 3.7-3.82-.12L14 25.8l-3.1-2.26-3.82.12-.92-3.7L3 17.82l1.4-3.55L3 10.72l3.16-2.14.92-3.7L10.9 5 14 2.75Z"/><path d="m9.75 14.2 2.75 2.75 5.75-5.75"/></svg>}

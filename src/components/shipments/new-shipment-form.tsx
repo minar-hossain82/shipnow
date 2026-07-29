@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Icon } from "@/components/dashboard/icons";
+import { AuthenticatedSidebarContent } from "@/components/dashboard/authenticated-sidebar-content";
 import styles from "./new-shipment.module.css";
 
 type Errors = {
@@ -216,27 +216,10 @@ export function NewShipmentForm() {
         >
           <aside
             className={styles.drawer}
+            style={{ overflowY: "auto", overscrollBehavior: "contain" }}
             onClick={(event) => event.stopPropagation()}
           >
-            <button
-              type="button"
-              onClick={() => setNavOpen(false)}
-              aria-label="Close navigation"
-            >
-              ×
-            </button>
-
-            <nav>
-              <Link href="/dashboard">
-                <Icon name="grid" />
-                Dashboard
-              </Link>
-
-              <Link href="/shipments" className={styles.active}>
-                <Icon name="truck" />
-                Shipments
-              </Link>
-            </nav>
+            <AuthenticatedSidebarContent active="Shipments" onNavigate={() => setNavOpen(false)} onClose={() => setNavOpen(false)} />
           </aside>
         </div>
       )}

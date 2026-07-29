@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Icon, type IconName } from "./icons";
 import { SidebarHeader } from "./sidebar-header";
+import { SidebarPromoCard } from "./sidebar-promo-card";
 
 const primary: Array<[string, IconName, string]> = [["Dashboard","grid","/dashboard"],["Analytics","chart","#"],["Calendar","calendar","#"],["Shipments","truck","/shipments"],["Tracking","route","#"],["Warehouse","warehouse","/warehouse"],["Fleets","fleet","#"],["Drivers","driver","#"],["Invoices & Billing","invoice","/invoices"]];
 const secondary: Array<[string, IconName, string?]> = [["Message","message","19"],["Notification","bell","5"],["Settings","settings"]];
@@ -15,6 +16,6 @@ export function Sidebar({ activeLabel="Dashboard" }: { activeLabel?: string }) {
   return <aside className="dashboard-sidebar shared-sidebar fixed inset-y-0 left-0 z-20 flex w-[224px] flex-col border-r border-[#eeeeef] bg-white">
     <SidebarHeader />
     <nav className="shared-sidebar-nav mt-[21px] px-4"><ul className="flex flex-col gap-2">{primary.map(item=><NavItem key={item[0]} item={item} active={item[0]===activeLabel}/>)}</ul><div className="my-4 border-t border-[#eeeeef]"/><ul className="flex flex-col gap-2">{secondary.map(item=><NavItem key={item[0]} item={item}/>)}</ul></nav>
-    <div className="shared-sidebar-promo px-4 pb-5"><div className="relative h-[252px] overflow-hidden rounded-xl bg-[#282828] p-[18px] text-white"><span className="absolute -right-1 -top-3 text-7xl font-black italic text-[#6854d6]">{"//"}</span><p className="relative mt-1 text-[24px] font-semibold leading-[1.05]">Loving<br/>ShipNow<br/>Free?</p><p className="relative mt-5 text-[11px] leading-4 text-[#d4d4d4]">Go Pro to access priority support, real-time tracking, and full analytics.</p><button type="button" className="relative mt-5 h-11 w-full rounded-lg bg-white text-[14px] font-medium text-[#292929]">Go Pro Today</button></div></div>
+    <div className="shared-sidebar-promo"><SidebarPromoCard/></div>
   </aside>;
 }

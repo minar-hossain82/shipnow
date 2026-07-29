@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Icon, type DashboardIcon } from "./dashboard-icons";
 import { SidebarHeader } from "./sidebar-header";
+import { SidebarPromoCard } from "./sidebar-promo-card";
+import { AuthenticatedSidebarContent } from "./authenticated-sidebar-content";
 import styles from "./dashboard.module.css";
 
 const primary: [string, DashboardIcon, string][] = [
@@ -25,13 +27,8 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   return <>
     <button aria-label="Close navigation" className={`${styles.scrim} ${open ? styles.scrimOpen : ""}`} onClick={onClose} />
     <aside className={`shared-sidebar ${styles.sidebar} ${open ? styles.sidebarOpen : ""}`}>
-      <SidebarHeader onClose={onClose} />
-      <nav className="shared-sidebar-nav">
-        <ul>{primary.map(item => <li key={item[0]}><Link href={item[2]} className={item[0] === "Dashboard" ? styles.active : ""} onClick={onClose}><Icon name={item[1]} /><span>{item[0]}</span></Link></li>)}</ul>
-        <hr />
-        <ul>{secondary.map(item => <li key={item[0]}><button><Icon name={item[1]} /><span>{item[0]}</span>{item[2] && <b>{item[2]}</b>}</button></li>)}</ul>
-      </nav>
-      <div className="shared-sidebar-promo"><div className={styles.proCard}><i>{"//"}</i><h2>Loving<br />ShipNow<br />Free?</h2><p>Go Pro to access priority support, real-time tracking, and full analytics.</p><button>Go Pro Today</button></div></div>
+      <div className={styles.desktopSidebar}><SidebarHeader onClose={onClose} /><nav className="shared-sidebar-nav"><ul>{primary.map(item => <li key={item[0]}><Link href={item[2]} className={item[0] === "Dashboard" ? styles.active : ""} onClick={onClose}><Icon name={item[1]} /><span>{item[0]}</span></Link></li>)}</ul><hr/><ul>{secondary.map(item => <li key={item[0]}><button><Icon name={item[1]} /><span>{item[0]}</span>{item[2] && <b>{item[2]}</b>}</button></li>)}</ul></nav><div className={`shared-sidebar-promo ${styles.sidebarPromo}`}><SidebarPromoCard/></div></div>
+      <div className={styles.mobileSidebar}><AuthenticatedSidebarContent active="Dashboard" onNavigate={onClose} onClose={onClose}/></div>
     </aside>
   </>;
 }

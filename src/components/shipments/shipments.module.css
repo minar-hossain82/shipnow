@@ -95,6 +95,7 @@
   color: #8065f4;
   margin-right: 9px;
 }
+@media(max-width:640px){.drawer{overflow-y:auto;overscroll-behavior:contain}}
 .summaryMetricIcon {
   display: block;
   width: 18px;
@@ -287,6 +288,13 @@
   display: grid;
   place-items: center;
   font-size: 20px;
+}
+.newestChevron {
+  display: inline-block;
+  width: 10px;
+  height: 6px;
+  margin-left: 8px;
+  vertical-align: 1px;
 }
 .freightTypeIcon {
   display: block;
@@ -851,6 +859,9 @@
     border-radius: 6px;
     font-size: 13px;
     position: absolute;
+  }
+  .gridPanel .newestChevron {
+    display: none;
   }
   .freightTypeIcon {
     width: 15px;

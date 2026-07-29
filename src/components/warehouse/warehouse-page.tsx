@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { Icon } from "@/components/dashboard/icons";
+import { AuthenticatedSidebarContent } from "@/components/dashboard/authenticated-sidebar-content";
 import { activities, packageStatuses, storageRows, warehouseFloors, warehouseSummary } from "@/data/warehouse";
 import { WarehouseInventory } from "./warehouse-inventory";
 import styles from "./warehouse.module.css";
@@ -11,7 +11,7 @@ import "./warehouse-fixes.module.css";
 const More=()=> <Icon name="more" className={styles.more}/>;
 
 function MobileBar({open}:{open:()=>void}){return <header className={styles.mobileBar}><i/><strong>Warehouse</strong><button type="button" onClick={open} aria-label="Open navigation">☰</button></header>}
-function Drawer({close}:{close:()=>void}){return <div className={styles.drawerBack} onClick={close}><aside onClick={event=>event.stopPropagation()}><button onClick={close} aria-label="Close navigation">×</button><nav><Link href="/dashboard"><Icon name="grid"/>Dashboard</Link><Link href="/shipments"><Icon name="truck"/>Shipments</Link><Link className={styles.active} href="/warehouse"><Icon name="warehouse"/>Warehouse</Link><Link href="/invoices"><Icon name="invoice"/>Invoices & Billing</Link></nav></aside></div>}
+function Drawer({close}:{close:()=>void}){return <div className={styles.drawerBack} onClick={close}><aside onClick={event=>event.stopPropagation()}><AuthenticatedSidebarContent active="Warehouse" onNavigate={close} onClose={close}/></aside></div>}
 function Footer(){return <footer className={styles.footer}><div><b>Copyright © 2025 Peterdraw</b><span>Privacy Policy</span><span>Term and conditions</span><span>Contact</span></div><div><span>ⓕ</span><span>𝕏</span><span>◎</span><span>▷</span><span>in</span></div></footer>}
 
 function FreightTabs(){return <div className={styles.freight}><button className={styles.freightActive}><Icon name="truck"/>Road Freight</button><button><span>▥</span><b>Rail Freight</b></button><button><span>◴</span><b>Ocean Freight</b></button><button><span>✈</span><b>Air Freight</b></button></div>}
