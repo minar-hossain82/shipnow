@@ -95,6 +95,11 @@
   color: #8065f4;
   margin-right: 9px;
 }
+.summaryMetricIcon {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
 .summaries article p {
   font-size: 13px;
   line-height: 17px;
@@ -258,7 +263,7 @@
   gap: 16px;
 }
 .shipmentCard {
-  height: 308px;
+  min-height: 308px;
   border-radius: 13px;
   background: #fff;
   padding: 17px;
@@ -282,6 +287,11 @@
   display: grid;
   place-items: center;
   font-size: 20px;
+}
+.freightTypeIcon {
+  display: block;
+  width: 22px;
+  height: 22px;
 }
 .status {
   display: inline-block;
@@ -313,11 +323,35 @@
 }
 .companyMark {
   width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
   text-align: center;
   font-size: 28px;
   font-weight: 700;
   color: #8065f4;
   margin-right: 10px;
+}
+.companyMark > svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+.companyFallback {
+  display: none;
+}
+.shipmentCard .companyMark > svg {
+  width: 30px;
+  height: 30px;
+}
+.table .companyFallback:only-child {
+  display: inline;
+}
+.companyLogoDark {
+  color: #29292b;
+}
+.companyLogoPurple {
+  color: #8065f4;
 }
 .company b {
   display: block;
@@ -588,7 +622,7 @@
     gap: 16px;
   }
   .shipmentCard {
-    height: 294px;
+    min-height: 294px;
     padding: 16px;
   }
   .toolbar {
@@ -788,7 +822,7 @@
     gap: 8px;
   }
   .shipmentCard {
-    height: 185px;
+    min-height: 185px;
     border-radius: 9px;
     padding: 10px;
   }
@@ -818,6 +852,10 @@
     font-size: 13px;
     position: absolute;
   }
+  .freightTypeIcon {
+    width: 15px;
+    height: 15px;
+  }
   .cardTop > div {
     padding-left: 32px;
   }
@@ -832,6 +870,10 @@
     font-size: 19px;
     width: 22px;
     margin-right: 5px;
+  }
+  .shipmentCard .companyMark > svg {
+    width: 20px;
+    height: 20px;
   }
   .company b {
     font-size: 9px;
@@ -1002,7 +1044,7 @@
 
 @media (min-width: 641px) and (max-width: 1023px) {
   .shipmentCard {
-    height: 330px;
+    min-height: 330px;
   }
   .shipmentCard .progressMeta {
     margin-top: 50px;
@@ -1012,7 +1054,7 @@
 @media (max-width: 640px) {
   .shipmentCard {
     position: relative;
-    height: 312px;
+    min-height: 312px;
   }
   .shipmentCard .company {
     position: absolute;

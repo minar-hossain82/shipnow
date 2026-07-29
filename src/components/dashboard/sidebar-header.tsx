@@ -11,7 +11,7 @@ export function SidebarHeader({ onClose }: { onClose?: () => void }) {
     <div className={styles.profile}>
       <span className={styles.avatar}>JD</span>
       <div className={styles.identity}><b>John Doe</b><small>Admin</small></div>
-      <span className={styles.chevron}>⌄</span>
+      <span className={styles.chevron}><Icon name="chevronDown" className={styles.chevronIcon}/></span>
     </div>
   </div>;
 }
