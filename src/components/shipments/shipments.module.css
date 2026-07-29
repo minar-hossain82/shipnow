@@ -95,6 +95,7 @@
   color: #8065f4;
   margin-right: 9px;
 }
+
 @media(max-width:640px){.drawer{overflow-y:auto;overscroll-behavior:contain}}
 .summaryMetricIcon {
   display: block;
@@ -2267,4 +2268,71 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M2.5 3.5h13l-5 5.6v4.4l-3 1V9.1l-5-5.6Z' stroke='%23444' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   }
 
+}
+
+/* Shipments table date control — tablet-only sizing guard. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .tableView .tablePanel .tools {
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .tableView .tablePanel .search {
+    width: 52px;
+    min-width: 52px;
+    height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 52px;
+    padding: 0;
+    border-radius: 10px;
+    background: #f3f3f3;
+  }
+
+  .tableView .tablePanel .search input {
+    display: none;
+  }
+
+  .tableView .tablePanel .search svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    margin: 0;
+  }
+
+  .tableView .tablePanel .date {
+    box-sizing: border-box;
+    width: 140px;
+    min-width: 140px;
+    height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 0 12px;
+    white-space: nowrap;
+  }
+
+  .tableView .tablePanel .date span {
+    min-width: 0;
+    flex: 1 1 auto;
+    white-space: nowrap;
+  }
+
+  .tableView .tablePanel .date .dateCalendarIcon {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    flex: 0 0 16px;
+  }
+
+  .tableView .tablePanel .date .newestChevron {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    flex: 0 0 14px;
+    margin-left: auto;
+  }
 }
