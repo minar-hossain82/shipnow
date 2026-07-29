@@ -14,6 +14,9 @@ type SortKey = "id" | "company" | "carrier" | "product" | "weight" | "route" | "
 type SortDirection = "ascending" | "descending";
 type GridSort = "newest" | "oldest" | "progress-desc" | "progress-asc" | "company-asc" | "company-desc";
 type GridFilters = { carriers:string[]; freight:string[]; statuses:string[] };
+type TableFilters = { carrier:string; freight:string };
+type TableFilterDraft = TableFilters & { status:ShipmentTableStatus | "All" };
+type DateRange = "this-week" | "this-month" | "last-month" | "last-3-months" | "all-time";
 const statuses = ["All", "Delivered", "In Transit", "Processing", "Out for Delivery"] as const;
 const tableStatuses = ["All", "Completed", "Delivery", "Pending"] as const;
 const emptyGridFilters: GridFilters = { carriers:[], freight:[], statuses:[] };
@@ -22,12 +25,20 @@ const gridSortOptions: Array<{value:GridSort;label:string}> = [
   {value:"progress-desc",label:"Progress: High to Low"}, {value:"progress-asc",label:"Progress: Low to High"},
   {value:"company-asc",label:"Company: A to Z"}, {value:"company-desc",label:"Company: Z to A"},
 ];
+const dateRangeOptions: Array<{value:DateRange;label:string}> = [
+  {value:"this-week",label:"This Week"},
+  {value:"this-month",label:"This Month"},
+  {value:"last-month",label:"Last Month"},
+  {value:"last-3-months",label:"Last 3 Months"},
+  {value:"all-time",label:"All Time"},
+];
 
 function LogoMark({ word = false }: { word?: boolean }) {
   return <span className={styles.logo}><i/><i/>{word && <b>SHIPNOW</b>}</span>;
 }
 
 function NewestChevron(){return <svg aria-hidden="true" className={styles.newestChevron} viewBox="0 0 10 6" fill="none"><path d="m1 1 4 4 4-4" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+function CalendarIcon(){return <svg aria-hidden="true" className={styles.dateCalendarIcon} viewBox="0 0 18 18" fill="none"><rect x="2.5" y="4" width="13" height="11.5" rx="1.5" stroke="currentColor" strokeWidth="1.35"/><path d="M5.5 2.5v3M12.5 2.5v3M2.5 7.25h13" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round"/></svg>}
 
 function StatusPill({ status }: { status: ShipmentStatus }) {
   return <span className={`${styles.status} ${styles[status.replaceAll(" ", "").toLowerCase()]}`}>{status === "Delivered" ? "Completed" : status}</span>;
@@ -95,6 +106,29 @@ const shipmentDate = (value:string) => {
   return Date.UTC(Number(match[3]),months.indexOf(match[1].toLowerCase()),Number(match[2]),hour,Number(match[5]));
 };
 
+// Mock-relative ranges keep the Figma default useful even when the real calendar advances.
+const latestShipmentDate = Math.max(...shipments.map(item=>shipmentDate(item.departure)));
+function matchesDateRange(timestamp:number,range:DateRange) {
+  if(range==="all-time") return true;
+  const reference = new Date(latestShipmentDate);
+  const year = reference.getUTCFullYear();
+  const month = reference.getUTCMonth();
+  let start = 0;
+  let end = latestShipmentDate;
+  if(range==="this-week") {
+    const mondayOffset = (reference.getUTCDay()+6)%7;
+    start = Date.UTC(year,month,reference.getUTCDate()-mondayOffset);
+  } else if(range==="this-month") {
+    start = Date.UTC(year,month,1);
+  } else if(range==="last-month") {
+    start = Date.UTC(year,month-1,1);
+    end = Date.UTC(year,month,1)-1;
+  } else {
+    start = Date.UTC(year,month-2,1);
+  }
+  return timestamp>=start && timestamp<=end;
+}
+
 function compareShipments(a:Shipment,b:Shipment,key:SortKey) {
   switch(key) {
     case "id": return numericId(a.id)-numericId(b.id);
@@ -119,7 +153,7 @@ function compareGridShipments(a:Shipment,b:Shipment,sort:GridSort) {
 }
 
 function focusMenuItem(container:HTMLElement,current:EventTarget & HTMLElement,direction:1|-1) {
-  const items = Array.from(container.querySelectorAll<HTMLElement>('[role="menuitem"], input:not([disabled])'));
+  const items = Array.from(container.querySelectorAll<HTMLElement>('[role="menuitem"], [role="menuitemradio"], input:not([disabled])'));
   const next = items[(items.indexOf(current)+direction+items.length)%items.length];
   next?.focus();
 }
@@ -171,15 +205,21 @@ export function ShipmentsPage() {
   const [page,setPage] = useState(1);
   const [pageSize,setPageSizeState] = useState(12);
   const [selected,setSelected] = useState<Set<string>>(new Set());
-  const [monthOnly,setMonthOnly] = useState(false);
+  const [tableFilters,setTableFilters] = useState<TableFilters>({carrier:"",freight:""});
+  const [draftTableFilters,setDraftTableFilters] = useState<TableFilterDraft>({status:"All",carrier:"",freight:""});
+  const [dateRange,setDateRange] = useState<DateRange>("this-month");
   const [gridSort,setGridSort] = useState<GridSort>("newest");
   const [appliedFilters,setAppliedFilters] = useState<GridFilters>(emptyGridFilters);
   const [draftFilters,setDraftFilters] = useState<GridFilters>(emptyGridFilters);
   const [filterOpen,setFilterOpen] = useState(false);
   const [sortOpen,setSortOpen] = useState(false);
+  const [tableFilterOpen,setTableFilterOpen] = useState(false);
+  const [dateOpen,setDateOpen] = useState(false);
   const selectPageRef = useRef<HTMLInputElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
   const sortRef = useRef<HTMLDivElement>(null);
+  const tableFilterRef = useRef<HTMLDivElement>(null);
+  const dateRef = useRef<HTMLDivElement>(null);
 
   const setView = (next:View) => { setViewState(next); if(next==="grid"&&pageSize===48)setPageSizeState(24); setStatus("All"); setPage(1); router.replace(`/shipments?view=${next}`, { scroll:false }); };
   const setPageSize = (size:number) => { setPageSizeState(size); setPage(1); };
@@ -192,12 +232,16 @@ export function ShipmentsPage() {
     const matchesStatus = status === "All" || (view === "table" ? item.tableStatus === status : item.status === status);
     const searchable = `${item.id} ${item.company} ${item.carrier} ${item.category} ${item.product} ${item.weight} ${item.origin} ${item.destination} ${item.status} ${item.tableStatus}`;
     const displayStatus = item.status === "Delivered" ? "Completed" : item.status;
-    const matchesPopover = view === "table" ||
+    const matchesGridPopover = view === "table" ||
       (!appliedFilters.carriers.length || appliedFilters.carriers.includes(item.carrier)) &&
       (!appliedFilters.freight.length || appliedFilters.freight.includes(item.freight)) &&
       (!appliedFilters.statuses.length || appliedFilters.statuses.includes(displayStatus));
-    return matchesStatus && (!query || searchable.toLocaleLowerCase().includes(query.toLocaleLowerCase())) && matchesPopover && (!monthOnly || item.departure.startsWith("Mar"));
-  }),[query,status,monthOnly,view,appliedFilters]);
+    const matchesTablePopover = view === "grid" ||
+      (!tableFilters.carrier || item.carrier===tableFilters.carrier) &&
+      (!tableFilters.freight || item.freight===tableFilters.freight);
+    const matchesDate = view === "grid" || matchesDateRange(shipmentDate(item.departure),dateRange);
+    return matchesStatus && (!query || searchable.toLocaleLowerCase().includes(query.toLocaleLowerCase())) && matchesGridPopover && matchesTablePopover && matchesDate;
+  }),[query,status,view,appliedFilters,tableFilters,dateRange]);
   const sortedShipments = useMemo(()=>view === "grid" ? [...filteredShipments].sort((a,b)=>compareGridShipments(a,b,gridSort)) : sortKey ? [...filteredShipments].sort((a,b)=>compareShipments(a,b,sortKey)*(sortDirection==="ascending"?1:-1)) : filteredShipments,[filteredShipments,view,gridSort,sortKey,sortDirection]);
   const pages = Math.max(1,Math.ceil(sortedShipments.length/pageSize));
   const currentPage = Math.min(page,pages);
@@ -211,26 +255,50 @@ export function ShipmentsPage() {
   const toggleAll = () => setSelected(current=>{const next=new Set(current);pageItems.forEach(item=>allSelected?next.delete(item.id):next.add(item.id));return next;});
   const activeTabs = view === "grid" ? statuses : tableStatuses;
   const activeFilterCount = appliedFilters.carriers.length+appliedFilters.freight.length+appliedFilters.statuses.length;
+  const activeTableFilterCount = (status==="All"?0:1)+(tableFilters.carrier?1:0)+(tableFilters.freight?1:0);
   const gridSortLabel = gridSortOptions.find(option=>option.value===gridSort)?.label ?? "Newest";
+  const dateRangeLabel = dateRangeOptions.find(option=>option.value===dateRange)?.label ?? "This Month";
   const toggleDraftFilter = (key:keyof GridFilters,value:string) => setDraftFilters(current=>({...current,[key]:current[key].includes(value)?current[key].filter(item=>item!==value):[...current[key],value]}));
 
   useEffect(()=>{if(selectPageRef.current)selectPageRef.current.indeterminate=someSelected},[someSelected]);
   useEffect(()=>{
-    if(!filterOpen && !sortOpen) return;
+    if(!filterOpen && !sortOpen && !tableFilterOpen && !dateOpen) return;
     const close = (event:MouseEvent) => {
       if(filterOpen && !filterRef.current?.contains(event.target as Node)) setFilterOpen(false);
       if(sortOpen && !sortRef.current?.contains(event.target as Node)) setSortOpen(false);
+      if(tableFilterOpen && !tableFilterRef.current?.contains(event.target as Node)) setTableFilterOpen(false);
+      if(dateOpen && !dateRef.current?.contains(event.target as Node)) setDateOpen(false);
     };
-    const key = (event:KeyboardEvent) => { if(event.key==="Escape"){setFilterOpen(false);setSortOpen(false);} };
+    const key = (event:KeyboardEvent) => { if(event.key==="Escape"){setFilterOpen(false);setSortOpen(false);setTableFilterOpen(false);setDateOpen(false);} };
     document.addEventListener("mousedown",close); document.addEventListener("keydown",key);
     return ()=>{document.removeEventListener("mousedown",close);document.removeEventListener("keydown",key)};
-  },[filterOpen,sortOpen]);
+  },[filterOpen,sortOpen,tableFilterOpen,dateOpen]);
 
   return <><MobileNavigation activeLabel="Shipments" barClassName={styles.mobileBar} backdropClassName={styles.drawerBackdrop} drawerClassName={styles.drawer} leading={<LogoMark/>} title={<strong>Shipments</strong>} menu="☰"/><main className={`${styles.page} ${view === "table" ? styles.tableView : styles.gridView}`}>
     <header className={styles.pageHeader}><div><h1>Shipments</h1><div className={styles.crumbRow}><p><b>Dashboard</b><span>/</span>Shipments</p><ViewSwitcher view={view} setView={setView}/></div></div><Link href="/shipments/new" className={styles.newShipment}><Icon name="plus"/>New Shipment</Link></header>
     {view === "table" && <SummaryCards/>}
     <div className={view === "table" ? styles.tablePanel : styles.gridPanel}>
-      <div className={styles.toolbar}><div className={styles.tabs}>{activeTabs.map(tab=><button type="button" className={status===tab?styles.activeTab:""} key={tab} onClick={()=>{setStatus(tab);setPage(1)}}>{tab}</button>)}</div><div className={styles.tools}><Search value={query} onChange={value=>{setQuery(value);setPage(1)}} placeholder={view==="grid"?"Search Shipment":"Search id, company, etc"}/>{view==="grid"?<div className={styles.menuWrap} ref={filterRef}><button type="button" className={`${styles.filter} ${activeFilterCount?styles.filterActive:""}`} aria-haspopup="dialog" aria-expanded={filterOpen} onClick={()=>{setDraftFilters(appliedFilters);setFilterOpen(value=>!value);setSortOpen(false)}}>⌯ <span>Filter</span>{activeFilterCount>0&&<b className={styles.filterCount}>{activeFilterCount}</b>}</button>{filterOpen&&<div className={styles.filterMenu} role="dialog" aria-label="Filter shipments">{([['carriers','Carrier'],['freight','Shipment Type'],['statuses','Status']] as const).map(([key,label])=><fieldset key={key}><legend>{label}</legend>{filterOptions[key].map(value=><label key={value}><input type="checkbox" checked={draftFilters[key].includes(value)} onChange={()=>toggleDraftFilter(key,value)} onKeyDown={event=>menuKeyDown(event,filterRef.current)}/><span>{value}</span></label>)}</fieldset>)}<div className={styles.filterActions}><button type="button" onClick={()=>{setDraftFilters(emptyGridFilters);setAppliedFilters(emptyGridFilters);setPage(1);setFilterOpen(false)}}>Clear Filters</button><button type="button" onClick={()=>{setAppliedFilters(draftFilters);setPage(1);setFilterOpen(false)}}>Apply Filters</button></div></div>}</div>:<button type="button" className={styles.filter} onClick={()=>{setStatus(current=>current==="All"?"Completed":"All");setPage(1)}}>⌯ <span>Filter</span></button>}{view==="table"?<button type="button" className={styles.date} onClick={()=>{setMonthOnly(value=>!value);setPage(1)}}>▣ <span>{monthOnly?"All Dates":"This Month"}⌄</span></button>:<><span className={styles.sortLabel}>Sort by:</span><div className={styles.menuWrap} ref={sortRef}><button type="button" className={styles.date} aria-haspopup="menu" aria-expanded={sortOpen} onClick={()=>{setSortOpen(value=>!value);setFilterOpen(false)}}>{gridSortLabel}<NewestChevron/></button>{sortOpen&&<div className={styles.sortMenu} role="menu" aria-label="Sort shipments">{gridSortOptions.map(option=><button type="button" role="menuitem" aria-current={gridSort===option.value?"true":undefined} className={gridSort===option.value?styles.menuSelected:""} key={option.value} onKeyDown={event=>menuKeyDown(event,sortRef.current)} onClick={()=>{setGridSort(option.value);setPage(1);setSortOpen(false)}}>{option.label}</button>)}</div>}</div></>}</div></div>
+      <div className={styles.toolbar}>
+        <div className={styles.tabs}>{activeTabs.map(tab=><button type="button" className={status===tab?styles.activeTab:""} key={tab} onClick={()=>{setStatus(tab);setPage(1)}}>{tab}</button>)}</div>
+        <div className={styles.tools}>
+          <Search value={query} onChange={value=>{setQuery(value);setPage(1)}} placeholder={view==="grid"?"Search Shipment":"Search id, company, etc"}/>
+          {view==="grid"?<div className={styles.menuWrap} ref={filterRef}><button type="button" className={`${styles.filter} ${activeFilterCount?styles.filterActive:""}`} aria-haspopup="dialog" aria-expanded={filterOpen} onClick={()=>{setDraftFilters(appliedFilters);setFilterOpen(value=>!value);setSortOpen(false)}}>⌯ <span>Filter</span>{activeFilterCount>0&&<b className={styles.filterCount}>{activeFilterCount}</b>}</button>{filterOpen&&<div className={styles.filterMenu} role="dialog" aria-label="Filter shipments">{([['carriers','Carrier'],['freight','Shipment Type'],['statuses','Status']] as const).map(([key,label])=><fieldset key={key}><legend>{label}</legend>{filterOptions[key].map(value=><label key={value}><input type="checkbox" checked={draftFilters[key].includes(value)} onChange={()=>toggleDraftFilter(key,value)} onKeyDown={event=>menuKeyDown(event,filterRef.current)}/><span>{value}</span></label>)}</fieldset>)}<div className={styles.filterActions}><button type="button" onClick={()=>{setDraftFilters(emptyGridFilters);setAppliedFilters(emptyGridFilters);setPage(1);setFilterOpen(false)}}>Clear Filters</button><button type="button" onClick={()=>{setAppliedFilters(draftFilters);setPage(1);setFilterOpen(false)}}>Apply Filters</button></div></div>}</div>:
+            <div className={styles.menuWrap} ref={tableFilterRef}>
+              <button type="button" className={`${styles.filter} ${activeTableFilterCount?styles.filterActive:""}`} aria-haspopup="dialog" aria-expanded={tableFilterOpen} onClick={()=>{setDraftTableFilters({status:status as TableFilterDraft["status"],...tableFilters});setTableFilterOpen(value=>!value);setDateOpen(false)}}>⌯ <span>Filter</span></button>
+              {tableFilterOpen&&<div className={styles.filterMenu} role="dialog" aria-label="Filter shipment table">
+                <fieldset><legend>Status</legend>{tableStatuses.map(value=><label key={value}><input type="radio" name="table-status" checked={draftTableFilters.status===value} onChange={()=>setDraftTableFilters(current=>({...current,status:value}))} onKeyDown={event=>menuKeyDown(event,tableFilterRef.current)}/><span>{value}</span></label>)}</fieldset>
+                <fieldset><legend>Carrier</legend><label><input type="radio" name="table-carrier" checked={!draftTableFilters.carrier} onChange={()=>setDraftTableFilters(current=>({...current,carrier:""}))}/><span>All</span></label>{filterOptions.carriers.map(value=><label key={value}><input type="radio" name="table-carrier" checked={draftTableFilters.carrier===value} onChange={()=>setDraftTableFilters(current=>({...current,carrier:value}))} onKeyDown={event=>menuKeyDown(event,tableFilterRef.current)}/><span>{value}</span></label>)}</fieldset>
+                <fieldset><legend>Freight / Shipment Type</legend><label><input type="radio" name="table-freight" checked={!draftTableFilters.freight} onChange={()=>setDraftTableFilters(current=>({...current,freight:""}))}/><span>All</span></label>{filterOptions.freight.map(value=><label key={value}><input type="radio" name="table-freight" checked={draftTableFilters.freight===value} onChange={()=>setDraftTableFilters(current=>({...current,freight:value}))} onKeyDown={event=>menuKeyDown(event,tableFilterRef.current)}/><span>{value}</span></label>)}</fieldset>
+                <div className={styles.filterActions}><button type="button" onClick={()=>{setStatus("All");setTableFilters({carrier:"",freight:""});setDraftTableFilters({status:"All",carrier:"",freight:""});setPage(1);setTableFilterOpen(false)}}>Clear Filters</button><button type="button" onClick={()=>{setStatus(draftTableFilters.status);setTableFilters({carrier:draftTableFilters.carrier,freight:draftTableFilters.freight});setPage(1);setTableFilterOpen(false)}}>Apply Filters</button></div>
+              </div>}
+            </div>}
+          {view==="table"?<div className={`${styles.menuWrap} ${styles.desktopDateControl}`} ref={dateRef}>
+            <button type="button" className={styles.date} aria-haspopup="menu" aria-expanded={dateOpen} onClick={()=>{setDateOpen(value=>!value);setTableFilterOpen(false)}}><CalendarIcon/><span>{dateRangeLabel}</span><NewestChevron/></button>
+            {dateOpen&&<div className={`${styles.sortMenu} ${styles.dateMenu}`} role="menu" aria-label="Filter shipments by date">{dateRangeOptions.map(option=><button type="button" role="menuitemradio" aria-checked={dateRange===option.value} className={dateRange===option.value?styles.menuSelected:""} key={option.value} onKeyDown={event=>menuKeyDown(event,dateRef.current)} onClick={()=>{setDateRange(option.value);setPage(1);setDateOpen(false)}}><span>{option.label}</span>{dateRange===option.value&&<b aria-hidden="true">✓</b>}</button>)}</div>}
+          </div>:<><span className={styles.sortLabel}>Sort by:</span><div className={`${styles.menuWrap} ${styles.gridSortWrap}`} ref={sortRef}><button type="button" className={styles.date} aria-haspopup="menu" aria-expanded={sortOpen} onClick={()=>{setSortOpen(value=>!value);setFilterOpen(false)}}>{gridSortLabel}<NewestChevron/></button>{sortOpen&&<div className={styles.sortMenu} role="menu" aria-label="Sort shipments">{gridSortOptions.map(option=><button type="button" role="menuitem" aria-current={gridSort===option.value?"true":undefined} className={gridSort===option.value?styles.menuSelected:""} key={option.value} onKeyDown={event=>menuKeyDown(event,sortRef.current)} onClick={()=>{setGridSort(option.value);setPage(1);setSortOpen(false)}}>{option.label}</button>)}</div>}</div></>}
+          <Link href="/shipments/new" className={styles.mobileCreate} aria-label="Create new shipment" onClick={()=>{setFilterOpen(false);setSortOpen(false);setTableFilterOpen(false);setDateOpen(false)}}><Icon name="plus"/></Link>
+        </div>
+      </div>
       {view === "grid" ? <div className={styles.cards}>{pageItems.map(item=><ShipmentCard shipment={item} key={item.id}/>)}</div> : <div className={styles.tableScroll}><table className={styles.table}><colgroup className={styles.tableColumns}><col/><col/><col/><col/><col/><col/><col/><col/><col/><col/></colgroup><thead><tr><th><input ref={selectPageRef} type="checkbox" checked={allSelected} aria-checked={someSelected?"mixed":allSelected} onChange={toggleAll} aria-label="Select all shipments on this page"/></th><SortHead label="Shipping ID" value="id" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Company" value="company" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Carriers" value="carrier" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Product Category" value="product" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Weight" value="weight" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Route" value="route" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Date" value="departure" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Progress" value="progress" sortKey={sortKey} direction={sortDirection} action={chooseSort}/><SortHead label="Status" value="tableStatus" sortKey={sortKey} direction={sortDirection} action={chooseSort}/></tr></thead><tbody>{pageItems.map(item=><tr key={item.id} className={selected.has(item.id)?styles.selectedRow:""}><td><input type="checkbox" checked={selected.has(item.id)} onChange={()=>toggle(item.id)} aria-label={`Select ${item.id}`}/></td><td><b className={styles.shipmentId}>{item.id}</b><small>{item.freight}</small></td><td><Company shipment={item}/></td><td><b>{item.carrier}</b><small>{item.category}</small></td><td>{item.product}</td><td>{item.weight}</td><td><b>{item.origin} <small>(Origin)</small></b><b className={styles.destination}>{item.destination} <small>(Destination)</small></b></td><td><b>{item.departure} <small>(ATD)</small></b><b className={styles.destination}>{item.arrival} <small>(ETA)</small></b></td><td><div className={styles.tableProgress}><i><span style={{width:`${item.progress}%`}}/></i><b>{item.progress}%</b></div></td><td><TableStatusPill status={item.tableStatus}/></td></tr>)}</tbody></table></div>}
       <Pager page={currentPage} pages={pages} pageSize={pageSize} total={sortedShipments.length} start={resultStart} end={resultEnd} setPage={setPage} setPageSize={setPageSize} grid={view==="grid"}/>
     </div><AppFooter className={styles.footer}/>
