@@ -7,7 +7,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { AuthenticatedSidebarContent } from "@/components/dashboard/authenticated-sidebar-content";
+import { AppFooter } from "@/components/layout/app-footer";
+import { MobileNavigation } from "@/components/layout/mobile-navigation";
 import styles from "./new-shipment.module.css";
 
 type FormValues = {
@@ -138,27 +139,6 @@ function SelectField({
   );
 }
 
-function Footer() {
-  return (
-    <footer className={styles.footer}>
-      <div>
-        <b>Copyright © 2025 Peterdraw</b>
-        <span>Privacy Policy</span>
-        <span>Term and conditions</span>
-        <span>Contact</span>
-      </div>
-
-      <div>
-        <span>ⓕ</span>
-        <span>𝕏</span>
-        <span>◎</span>
-        <span>▷</span>
-        <span>in</span>
-      </div>
-    </footer>
-  );
-}
-
 export function NewShipmentForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [formValues,setFormValues] = useState<FormValues>(()=>({...initialValues,services:[...initialValues.services]}));
@@ -167,7 +147,6 @@ export function NewShipmentForm() {
   const [submitAttempted,setSubmitAttempted] = useState(false);
   const [isSubmitting,setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
-  const [navOpen, setNavOpen] = useState(false);
 
   const emailIsValid = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
   const getEmailError = (value: string) => {
@@ -245,36 +224,7 @@ export function NewShipmentForm() {
 
   return (
     <>
-      <header className={styles.mobileBar}>
-        <Link href="/shipments" aria-label="Back to Shipments">
-          ‹
-        </Link>
-
-        <strong>Create New Shipment</strong>
-
-        <button
-          type="button"
-          aria-label="Open navigation"
-          onClick={() => setNavOpen(true)}
-        >
-          ☰
-        </button>
-      </header>
-
-      {navOpen && (
-        <div
-          className={styles.drawerBackdrop}
-          onClick={() => setNavOpen(false)}
-        >
-          <aside
-            className={styles.drawer}
-            style={{ overflowY: "auto", overscrollBehavior: "contain" }}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <AuthenticatedSidebarContent active="Shipments" onNavigate={() => setNavOpen(false)} onClose={() => setNavOpen(false)} />
-          </aside>
-        </div>
-      )}
+      <MobileNavigation activeLabel="Shipments" barClassName={styles.mobileBar} backdropClassName={styles.drawerBackdrop} drawerClassName={styles.drawer} leading={<Link href="/shipments" aria-label="Back to Shipments">‹</Link>} title={<strong>Create New Shipment</strong>} menu="☰"/>
 
       <main className={styles.page}>
         <header className={styles.heading}>
@@ -593,7 +543,7 @@ export function NewShipmentForm() {
           </div>
         </form>
 
-        <Footer />
+        <AppFooter className={styles.footer}/>
       </main>
     </>
   );
