@@ -1,6 +1,6 @@
 # ShipNow Logistics Dashboard
 
-A responsive logistics dashboard built with **Next.js**, **TypeScript**, **Tailwind CSS**, and **Recharts**. The application simulates a modern shipment management system using static mock data and focuses on responsive design, reusable components, and interactive UI.
+A responsive logistics dashboard built with **Next.js**, **TypeScript**, **Css Modules**, and **Recharts**. The application simulates a modern shipment management system using static mock data and focuses on responsive design, reusable components, and interactive UI.
 
 ## Live Demo
 
