@@ -43,6 +43,8 @@
 
 @media(min-width:1025px){.dashboardBottomRow{grid-column:1/4;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,318px);align-items:stretch;gap:21px;width:auto;height:403px;min-width:0;max-width:100%}.dashboardBottomRow>.recentShipments,.dashboardBottomRow>.activity{grid-column:auto;width:100%;max-width:100%;height:100%;min-height:0;align-self:stretch;box-sizing:border-box}.activity ol{margin-left:0}.activity li{display:grid;grid-template-columns:46px minmax(0,1fr);column-gap:6px}.activity li>i{position:relative;left:auto;grid-column:1;grid-row:1;justify-self:end}.activity li>i,.activity li>span{transform:translateX(-7px)}.activity li>p{grid-column:2;grid-row:1;margin-left:0}.activity li>span{left:29px}.activity li:last-child{margin-bottom:0}}
 
+@media(min-width:1025px){.activity li>span.connectorToResponsiveActivity{display:none}}
+
 @media(max-width:1024px){.dashboardBottomRow{display:contents}}
 
 @media(min-width:1025px) and (max-width:1200px){.dashboardMiddleRow>.categories{padding-block:10px}.dashboardMiddleRow>.categories .categoryTotal{margin-top:15px}.dashboardMiddleRow>.categories .categoryBar{margin-top:14px}.dashboardMiddleRow>.categories ul{margin-top:12px;gap:6px}}
