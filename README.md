@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ShipNow Logistics Dashboard
+
+A responsive logistics dashboard built with **Next.js**, **TypeScript**, **Tailwind CSS**, and **Recharts**. The application simulates a modern shipment management system using static mock data and focuses on responsive design, reusable components, and interactive UI.
+
+## Live Demo
+
+- **Live:** https://minar-shipnow.vercel.app
+- **Repository:** https://github.com/minar-hossain82/shipnow
+
+---
+
+## Tech Stack
+
+- Next.js (App Router)
+- TypeScript
+- CSS Modules
+- Recharts
+- Lucide React
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Clone the repository
+
+```bash
+git clone https://github.com/minar-hossain82/shipnow.git
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Screen Status
 
-To learn more about Next.js, take a look at the following resources:
+| Screen | Status |
+|--------|--------|
+| Login | ✅ Complete |
+| Dashboard | ✅ Complete |
+| Shipments (Table) | ✅ Complete |
+| Shipments (Grid) | ✅ Complete |
+| Create Shipment | ✅ Complete |
+| Warehouse | ✅ Complete |
+| Invoices & Billing | ✅ Complete |
+| Analytics | ⚠️ Placeholder |
+| Calendar | ⚠️ Placeholder |
+| Tracking | ⚠️ Placeholder |
+| Fleets | ⚠️ Placeholder |
+| Drivers | ⚠️ Placeholder |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Features
 
-## Deploy on Vercel
+- Responsive layout for Desktop, Tablet, and Mobile
+- Shared authenticated application shell
+- Interactive charts
+- Shipment search, filtering, sorting, and pagination
+- Table and Grid views
+- Shipment creation form with validation
+- Invoice details and billing overview
+- Warehouse inventory dashboard
+- Static mock data architecture
+- Reusable components
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Known Issues
+
+- Placeholder pages contain minimal UI only, as they were not part of the required implementation.
+- The project uses static mock data and does not include backend integration.
+
+---
+
+## Assumptions
+
+- Static JSON/mock data is used for all screens.
+- Authentication is simulated for demonstration purposes.
+- Charts and statistics are based on mock data.
+- No API or database integration was required.
+
+---
+
+## Author
+
+**Minar Hossain**
