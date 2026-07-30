@@ -150,3 +150,30 @@
 .ring{position:relative;background:none;overflow:visible}.ring:before{display:none}.ring>div:last-child{position:absolute;inset:0;display:grid;place-content:center;pointer-events:none}.capacityTooltip{width:88px;display:grid;gap:2px;border-radius:7px;background:#fff;padding:7px 8px;color:#292929;box-shadow:0 4px 12px rgb(0 0 0/16%);font-size:9px;line-height:12px}.capacityTooltip span,.capacityTooltip small{color:#777}.statusTabs .statusActive{border-radius:9px;background:#292929;color:#fff}.statusTabs button:first-child:not(.statusActive){background:transparent;color:#777}.storage th button{color:inherit;font:inherit;text-align:left}.empty{display:grid;min-height:64px;place-items:center;color:#888;font-size:10px}.storage td.empty{text-align:center}.page button:focus-visible,.mobileBar button:focus-visible{outline:2px solid #8065f4;outline-offset:2px}
 .storageToolbar{display:flex;align-items:center;gap:12px;white-space:nowrap}.storage header button.storageFilter,.storage header button.storageSection{height:37px;display:flex;align-items:center;border-radius:9px;background:#f2f2f2;font-size:11px;line-height:1}.storageFilter{min-width:96px;padding:0 13px;gap:7px}.storageSection{min-width:88px;justify-content:space-between;padding:0 13px;gap:12px}.storageFilter span,.storageSection span{color:#333!important;font-size:11px!important;white-space:nowrap}.storageFilter svg:first-child{width:16px;height:16px;flex-shrink:0}.storageFilter svg:last-child,.storageSection svg{width:12px;height:12px;flex-shrink:0}.storageSortLabel{color:#888;font-size:10px;font-weight:400;line-height:1}
 .storageMenuWrap{position:relative}.storageFilterActive{box-shadow:inset 0 0 0 1px rgb(128 101 244/.35);color:#5736ba}.storageFilterMenu,.storageSortMenu{position:absolute;z-index:20;top:calc(100% + 6px);border:1px solid #e8e8ea;border-radius:10px;background:#fff;box-shadow:0 7px 20px rgb(24 24 27/.14);color:#333;white-space:normal}.storageFilterMenu{left:0;width:226px;padding:10px}.storageSortMenu{right:0;width:190px;padding:5px}.storageFilterMenu fieldset{margin:0 0 9px;padding:0 0 8px;border:0;border-bottom:1px solid #eee}.storageFilterMenu fieldset:last-of-type{margin-bottom:8px}.storageFilterMenu legend{margin-bottom:5px;color:#666;font-size:9px;font-weight:600}.storageFilterMenu label{min-height:23px;display:flex;align-items:center;gap:7px;color:#444;font-size:10px;cursor:pointer}.storageFilterMenu input{width:12px;height:12px;margin:0;accent-color:#8065f4}.storageFilterMenu label span{font-size:10px;color:#444}.storage header .storageFilterMenu button.clearStorageFilters{width:100%;height:28px;border:0;border-radius:6px;padding:0;background:#f2f2f2;color:#5736ba;font-size:10px}.clearStorageFilters:disabled{opacity:.45;cursor:default}.storage header .storageSortMenu button{width:100%;height:29px;display:flex;align-items:center;justify-content:space-between;border:0;border-radius:6px;padding:0 8px;background:transparent;color:#444;font-size:10px;text-align:left}.storageSortMenu button:hover,.storageSortMenu button:focus-visible,.storageMenuSelected{background:#f1edff!important;color:#5736ba!important}.storageSortMenu button span{color:inherit;font-size:10px}.storageSortMenu button b{font-size:10px}.storageFilterMenu:focus-within,.storageSortMenu:focus-within{outline:none}
+
+@media (min-width:1025px){
+  .storage{min-width:0}
+  .storageScroll,.storage table,.storage thead,.storage tbody{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+  .storage thead tr,.storage tbody tr{display:grid;grid-template-columns:minmax(0,.55fr) minmax(0,.85fr) minmax(0,1.35fr) minmax(0,1.55fr) minmax(0,.85fr) minmax(0,1.15fr);width:100%;max-width:100%;min-width:0;box-sizing:border-box;border-bottom:1px solid #ddd}
+  .storage th,.storage td{width:auto;min-width:0;padding:0 12px;display:flex;align-items:center;white-space:nowrap;border-bottom:0}
+  .storage th{height:42px}
+  .storage td{height:47px}
+  .storage td:nth-child(4)>div{width:100%;max-width:145px;min-width:80px;height:13px;flex:1 1 auto}
+  .storage td:nth-child(4)>div>i{height:100%;min-width:0;display:block}
+  .storage td.empty{grid-column:1/-1;justify-content:center}
+}
+
+@media (min-width:768px) and (max-width:1024px){
+  .storage{min-width:0;padding-inline:18px}
+  .storage>header{height:70px}
+  .storageScroll,.storage table,.storage thead,.storage tbody{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+  .storageScroll{overflow:visible}
+  .storage table{min-width:0}
+  .storage thead tr,.storage tbody tr{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,.85fr) minmax(0,1.3fr) minmax(0,1.55fr) minmax(0,1fr) minmax(0,.95fr);width:100%;max-width:100%;min-width:0;box-sizing:border-box;border-bottom:1px solid #ddd}
+  .storage th,.storage td{width:auto;min-width:0;padding:0 11px;display:flex;align-items:center;white-space:nowrap;border-bottom:0}
+  .storage th{height:36px}
+  .storage td{height:44px}
+  .storage td:nth-child(4)>div{width:100%;max-width:132px;min-width:80px;height:13px;flex:1 1 auto}
+  .storage td:nth-child(4)>div>i{height:100%;min-width:0;display:block}
+  .storage td.empty{grid-column:1/-1;justify-content:center}
+}

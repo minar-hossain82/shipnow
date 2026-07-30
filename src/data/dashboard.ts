@@ -51,4 +51,5 @@ export const activities = [
   { icon: "tag", text: "Customer Support", user: "@SupportKen", rest: " added a priority tag to Order ID 77889JKL", time: "11:30 AM" },
   { icon: "refresh", text: "User", user: "@SallyMae88", rest: " initiated a return process for Order ID 44556GHI", time: "11:00 AM" },
   { icon: "check", text: "Administrator", user: "@AdminLisa", rest: " resolved a delivery issue for Order ID 12345XYZ", time: "10:15 AM" },
+  { icon: "refresh", text: "User", user: "@Mickey92", rest: " updated the shipping address for Order ID 67890ABC", time: "09:45 AM", tabletOnly: true },
 ] as const;
